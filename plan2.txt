@@ -1,0 +1,43 @@
+[Game Concept] Number Target Puzzle
+Game teka-teki matematika di mana pemain diberikan sebuah angka target (misal: 120) dan serangkaian angka input (misal: 75, 5, 8). Pemain harus menggunakan operasi matematika dasar (+, -, *, /) pada angka-angka input untuk mencapai angka target.
+
+User Review Required
+Pemilihan Nama: Silakan tinjau bagian "Usulan Nama Game" di bawah dan putuskan mana yang akan kita pakai (atau beri ide lain).
+Aturan Permainan: Apakah Anda setuju dengan aturan standar "Single Use" (satu angka hanya boleh dipakai sesuai jumlahnya di papan) dan tidak boleh ada angka desimal/negatif di tengah perhitungan?
+Usulan Nama Game
+Dari opsi yang Anda sebutkan, berikut adalah pandangan saya:
+
+CountiQ (Rekomendasi Terbaik): Sangat catchy, terdengar cerdas, dan merupakan referensi halus (plesetan) ke acara TV inspirasinya yaitu "Countdown". Kata 'Count' juga melambangkan berhitung.
+MathiQ (Pilihan Kuat ke-2): Sangat jelas dan langsung menyatakan bahwa ini game matematika. Cocok untuk ASO (App Store Optimization) jika orang melakukan pencarian dengan kata kunci "Math".
+CalciQ: Terdengar sedikit kaku, lebih mirip aplikasi utilitas/kalkulator daripada sebuah game teka-teki yang menyenangkan.
+Proposed Changes (Rencana Kedepan)
+Jika Anda setuju dengan konsep dasarnya, kita akan mulai membangun game ini (kemungkinan sebagai project Flutter baru atau module terpisah). Berikut adalah rencana fase pengembangannya:
+
+Fase 1: Core Engine & Algorithm (Fondasi Utama)
+Hal tersulit dari game ini adalah memastikan soal yang disajikan benar-benar ada jawabannya.
+
+Generator Soal: Membuat script Dart yang meng-generate angka target dan sekumpulan angka input secara acak.
+Solver (Pencari Solusi): Algoritma brute-force ringan di background untuk memverifikasi bahwa kombinasi acak tersebut memiliki setidaknya satu solusi penyelesaian. Jika tidak ada solusi, generate ulang.
+Game Validator: Fungsi untuk mengecek langkah pemain (mencegah pembagian yang menghasilkan pecahan, dan mencegah pengurangan yang menghasilkan minus).
+Fase 2: UI/UX & Interaksi Pemain
+Game Board: Membuat layout di mana angka dan operator ditempatkan.
+Mekanik Interaksi: Menentukan cara pemain bermain. (Misalnya: Tap angka pertama -> Tap operator -> Tap angka kedua -> Muncul hasil gabungan yang menggantikan angka sebelumnya).
+State Management: Menggunakan Provider atau Riverpod untuk melacak status angka di papan dan history undo.
+Fase 3: Mode Permainan & Leveling
+Classic Campaign: Menyusun tingkat kesulitan (Level 1, Level 2, dst).
+Mudah: Target 10-100, operasi dominan tambah/kurang.
+Sulit: Target ratusan, membutuhkan kombinasi perkalian dan pembagian.
+Daily Challenge / Time Attack: Mode agar pemain punya alasan membuka game setiap hari.
+Fase 4: Monetisasi & Polish (Polesan Akhir)
+Sistem Hint (Bantuan): Jika pemain menyerah, mereka bisa menggunakan koin/menonton iklan untuk melihat "Satu langkah benar pertama" dari algoritma Solver kita.
+Efek Visual (Juiciness): Animasi angka yang menyatu, efek suara yang memuaskan saat berhasil, dan UI yang bersih (clean aesthetics).
+Verification Plan
+Automated Tests
+Menulis unit test spesifik untuk Algoritma Solver/Generator di Dart. Kita harus menguji algoritma ini ribuan kali secara terotomatisasi untuk memastikan ia bisa menghasilkan soal valid secara efisien tanpa membuat game lag.
+Manual Verification
+Menjalankan purwarupa (prototype) UI di emulator untuk menguji feel atau rasa saat mengklik angka dan operator. Memastikan mekaniknya intuitif dan menyenangkan.
+Brainstorming New Game Concept
+11:39 AM
+Halo! Wah, selamat ya atas pencapaiannya! Membuat dua game sampai tahap rilis (dan proses review) itu bukan hal yang mudah. 🎉
+
+Terkait SortiQ yang belum ada download, jangan berkecil hati. Di dunia mobile gaming saat ini, persaingannya memang sangat ketat, dan seringkali masalahnya bukan pada gamenya, melainkan pada penemuan (discoverability) dan pemasaran (marketing). Mungkin nanti kita juga bisa obrolin sedikit strategi ringan untuk 

@@ -1,0 +1,52 @@
+Wah, ide yang sangat bagus! Gambar yang Anda berikan itu sebenarnya sangat mirip dengan segmen permainan angka yang sangat populer dari acara kuis TV Inggris bernama "Countdown" (atau adaptasinya di negara lain seperti "Letters and Numbers").
+
+Ini adalah jenis game math puzzle yang klasik, elegan, dan bisa sangat adiktif. Kalau Anda ingin membuat game seperti ini (mungkin namanya MathiQ atau CalcIQ?), berikut adalah aturan standar yang biasa digunakan di permainan tersebut, yang bisa Anda jadikan fondasi:
+
+Aturan Standar (Classic Mode)
+Gunakan Angka Sekali Saja (Single Use): Setiap kotak angka di bawah (75, 7, 6, 2, 8, 5) hanya boleh digunakan maksimal satu kali. Jika di deretan angka tersebut ada dua angka '5', barulah user boleh menggunakan angka 5 dua kali.
+Tidak Wajib Pakai Semua: User tidak harus menggunakan keenam angka tersebut. Kalau dengan 3 angka saja sudah ketemu jawabannya (misal untuk mencapai 120: 75 + 45), itu diperbolehkan (asalkan 45 bisa didapat dari sisa angka lain).
+Operasi Dasar: Hanya boleh menggunakan Tambah (+), Kurang (-), Kali (x), dan Bagi (/).
+Hanya Bilangan Bulat Positif: Ini aturan yang bikin menantang. Di setiap tahap perhitungan (intermediate steps), hasilnya tidak boleh pecahan dan tidak boleh negatif.
+Contoh salah: 5 / 2 = 2.5 (tidak boleh karena pecahan)
+Contoh salah: 5 - 8 = -3 (tidak boleh karena negatif)
+Mengapa Aturan "Single Use" Itu Penting?
+Kalau user boleh menggunakan angka yang sama berkali-kali (misalnya angka 5 dipakai berulang kali), gamenya akan jadi terlalu gampang atau exploitable. User bisa saja hanya menjumlahkan 5 + 5 + 5... sampai angkanya tercapai, dan itu menghilangkan esensi memecahkan teka-tekinya.
+
+Ide Variasi / Fitur Tambahan untuk Game Anda:
+Agar game Anda punya ciri khas dan tidak sekadar copy-paste dari konsep acara TV, Anda bisa menambahkan beberapa mode atau mekanik:
+
+Sistem Bintang (Scoring):
+3 Bintang: Mencapai target dengan tepat (Tepat 120).
+2 Bintang: Melenceng sedikit (Misal: berjarak 1-5 angka dari target, misal 118 atau 123).
+1 Bintang: Berjarak 6-10 angka dari target.
+Mode Berwaktu (Time Attack): Diberi waktu 30-60 detik. Cukup bikin panik dan seru.
+Mode Level (Campaign):
+Level awal: Targetnya kecil (puluhan) dan angkanya gampang.
+Level lanjut: Targetnya besar (ratusan) dan butuh operasi perkalian serta pembagian bertingkat.
+Sistem Bantuan (Hints): Jika pemain mentok, mereka bisa menonton iklan atau memakai koin untuk melihat 1 langkah awal penyelesaian (misal: "Coba kalikan 6 dengan 2 dulu").
+Sedikit Contoh Solusi dari Gambar Anda: Target = 120. Angka = 75, 7, 6, 2, 8, 5. Salah satu cara mudahnya:
+
+7 + 5 = 12
+12 * (8 + 2) -> Ups, saya pakai angka yang tidak ada? (Mari kita pakai angka yang ada di gambar) Coba ini:
+6 * 5 = 30
+30 * 2 = 60
+Nah kurang dikali 2 lagi tapi gak ada angkanya.
+Cara lain:
+
+75 + 5 = 80
+6 + 2 - 8 = 0 (Bisa untuk menghilangkan angka)
+Wah ternyata seru dan menantang memikirkan algoritmanya! (Sepertinya solusinya: 7 + 5 = 12. Tapi 5-nya cuma satu... )
+Ah! Bagaimana dengan ini:
+
+75 + 5 = 80
+6 * 8 = 48
+48 - 8 = 40
+80 + 40 = 120 (Tapi ini memakai angka 8 dua kali, tidak boleh kalau berdasar aturan standar karena angka 8 di gambar cuma 1).
+Solusi sah:
+
+8 - 6 = 2
+7 + 5 = 12 (Wah, 5 cuma ada satu). Coba yang lain:
+75 / 5 = 15
+15 * 8 = 120
+SELESAI! Kita hanya pakai 75, 5, dan 8. Angka 7, 6, 2 tidak usah dipakai.
+Bagaimana menurut Anda? Apakah konsep ini menarik untuk Anda kembangkan? Kalau iya, kita bisa mulai memikirkan bagaimana cara membuat generator soalnya di Flutter (algoritma yang memastikan soal tersebut ADA jawabannya).
