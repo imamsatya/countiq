@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/services/achievement_service.dart';
+import '../widgets/achievement_toast.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   final int timeSeconds;
@@ -52,6 +54,25 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
 
     _animController.forward();
     _confettiController.play();
+
+    // Check for new achievements
+    _checkAchievements();
+  }
+
+  Future<void> _checkAchievements() async {
+    final newly = await AchievementService.instance.checkAfterSolve(
+      timeSeconds: widget.timeSeconds,
+      steps: widget.stepsCount,
+      hints: widget.hintsUsed,
+      stars: widget.stars,
+    );
+    if (!mounted) return;
+    // Show toasts for each new achievement with delay
+    for (int i = 0; i < newly.length; i++) {
+      Future.delayed(Duration(milliseconds: 1500 + i * 800), () {
+        if (mounted) showAchievementToast(context, newly[i]);
+      });
+    }
   }
 
   @override

@@ -8,6 +8,8 @@ import '../screens/campaign_game_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/statistics_screen.dart';
 import '../screens/daily_challenge_screen.dart';
+import '../screens/achievements_screen.dart';
+import '../screens/how_to_play_screen.dart';
 
 /// Smooth slide-fade transition for all routes
 CustomTransitionPage<void> _transitionPage({
@@ -103,6 +105,16 @@ final appRouter = GoRouter(
       path: '/daily',
       pageBuilder: (context, state) =>
           _transitionPage(child: const DailyChallengeScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/achievements',
+      pageBuilder: (context, state) =>
+          _transitionPage(child: const AchievementsScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/how-to-play',
+      pageBuilder: (context, state) =>
+          _transitionPage(child: const HowToPlayScreen(), state: state),
     ),
   ],
 );

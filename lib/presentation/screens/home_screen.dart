@@ -138,9 +138,13 @@ class HomeScreen extends ConsumerWidget {
                       _buildIconButton(
                         icon: Icons.emoji_events_rounded,
                         tooltip: 'Achievements',
-                        onTap: () {
-                          // Coming soon
-                        },
+                        onTap: () => context.push('/achievements'),
+                      ),
+                      const SizedBox(width: 16),
+                      _buildIconButton(
+                        icon: Icons.help_outline_rounded,
+                        tooltip: 'How to Play',
+                        onTap: () => context.push('/how-to-play'),
                       ),
                       const SizedBox(width: 16),
                       _buildIconButton(
