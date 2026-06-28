@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/achievement_service.dart';
+import '../../core/services/sound_service.dart';
 
 /// Shows a beautiful toast notification when an achievement is unlocked
 void showAchievementToast(BuildContext context, Achievement achievement) {
+  SoundService.instance.playAchievement();
   final overlay = Overlay.of(context);
   late OverlayEntry entry;
 

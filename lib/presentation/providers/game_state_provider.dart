@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../../core/engine/puzzle_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
+import '../../core/services/sound_service.dart';
 
 /// Game state for a CountiQ round
 class GameState {
@@ -153,6 +154,7 @@ class GameStateNotifier extends StateNotifier<GameState> {
 
     if (state.selectedFirstIndex == null) {
       // Selecting the first number
+      SoundService.instance.playTap();
       state = state.copyWith(selectedFirstIndex: () => boardIndex);
     } else if (state.selectedOperator != null) {
       // We have first number + operator, now selecting second number
@@ -177,6 +179,7 @@ class GameStateNotifier extends StateNotifier<GameState> {
     if (state.isSolved) return;
     if (state.selectedFirstIndex == null) return;
 
+    SoundService.instance.select();
     state = state.copyWith(
       selectedOperator: () => op,
       errorMessage: () => null,
@@ -203,6 +206,7 @@ class GameStateNotifier extends StateNotifier<GameState> {
       } else {
         errMsg = 'Invalid operation';
       }
+      SoundService.instance.playError();
       state = state.copyWith(
         selectedFirstIndex: () => null,
         selectedOperator: () => null,
@@ -245,6 +249,14 @@ class GameStateNotifier extends StateNotifier<GameState> {
       // Recalculate stars now that we know it's solved
       final stars = state.calculateStars();
       state = state.copyWith(stars: stars > 0 ? stars : 1, isSolved: true);
+      // Play celebration sound
+      if (stars >= 3) {
+        SoundService.instance.playThreeStar();
+      } else {
+        SoundService.instance.playSuccess();
+      }
+    } else {
+      SoundService.instance.playTap();
     }
   }
 

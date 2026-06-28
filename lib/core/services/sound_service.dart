@@ -1,38 +1,71 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import '../../data/datasources/local_database.dart';
 
-/// Lightweight sound & haptic feedback service.
-/// Uses system sounds and haptic feedback for cross-platform compatibility.
+/// Audio & haptic feedback service for CountiQ.
+/// Uses same sound files as CryptiQ: pop.mp3, success.mp3, error.mp3
 class SoundService {
   SoundService._();
-  static final instance = SoundService._();
+  static final SoundService instance = SoundService._();
 
-  // Sound effects can be added later with audioplayers package
-  // bool get _soundEnabled => LocalDatabase.instance.getSoundEnabled();
+  final AudioPlayer _player = AudioPlayer();
+
+  bool get _soundEnabled => LocalDatabase.instance.getSoundEnabled();
   bool get _hapticEnabled => LocalDatabase.instance.getHapticEnabled();
 
-  /// Light tap feedback (number/operator selection)
-  void tap() {
+  /// Tap sound (number/operator selection)
+  Future<void> playTap() async {
+    if (_soundEnabled) {
+      await _player.play(AssetSource('audio/pop.mp3'));
+    }
     if (_hapticEnabled) HapticFeedback.lightImpact();
   }
 
-  /// Selection click (operator picked)
+  /// Success sound (puzzle solved!)
+  Future<void> playSuccess() async {
+    if (_soundEnabled) {
+      await _player.play(AssetSource('audio/success.mp3'));
+    }
+    if (_hapticEnabled) HapticFeedback.heavyImpact();
+  }
+
+  /// Three-star celebration (double success)
+  Future<void> playThreeStar() async {
+    if (_soundEnabled) {
+      await _player.play(AssetSource('audio/success.mp3'));
+      await Future.delayed(const Duration(milliseconds: 200));
+      await _player.play(AssetSource('audio/success.mp3'));
+    }
+    if (_hapticEnabled) HapticFeedback.heavyImpact();
+  }
+
+  /// Achievement unlock sound
+  Future<void> playAchievement() async {
+    if (_soundEnabled) {
+      await _player.play(AssetSource('audio/success.mp3'));
+    }
+    if (_hapticEnabled) HapticFeedback.mediumImpact();
+  }
+
+  /// Error sound (invalid operation)
+  Future<void> playError() async {
+    if (_soundEnabled) {
+      await _player.play(AssetSource('audio/error.mp3'));
+    }
+    if (_hapticEnabled) HapticFeedback.mediumImpact();
+  }
+
+  /// Selection haptic only (operator picked)
   void select() {
     if (_hapticEnabled) HapticFeedback.selectionClick();
   }
 
-  /// Success vibration (puzzle solved!)
-  void success() {
-    if (_hapticEnabled) HapticFeedback.heavyImpact();
-  }
-
-  /// Error vibration (invalid move)
-  void error() {
-    if (_hapticEnabled) HapticFeedback.mediumImpact();
-  }
-
-  /// Undo/Reset vibration
+  /// Undo/Reset haptic only
   void undo() {
     if (_hapticEnabled) HapticFeedback.lightImpact();
+  }
+
+  void dispose() {
+    _player.dispose();
   }
 }
