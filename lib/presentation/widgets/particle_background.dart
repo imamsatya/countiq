@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 
 /// Animated floating math symbols background.
-/// Uses +, −, ×, ÷ and digit characters as particles.
+/// Uses operators, digits, and math symbols as particles with rotation.
 class ParticleBackground extends StatefulWidget {
   final Widget child;
   const ParticleBackground({super.key, required this.child});
@@ -24,7 +24,7 @@ class _ParticleBackgroundState extends State<ParticleBackground>
       duration: const Duration(seconds: 30),
       vsync: this,
     )..repeat();
-    _particles = List.generate(20, (_) => _MathParticle());
+    _particles = List.generate(25, (_) => _MathParticle());
   }
 
   @override
@@ -66,17 +66,23 @@ class _MathParticle {
   final double size;
   final double opacity;
   final double phase;
+  final double rotationSpeed;
   final String symbol;
 
-  static const _symbols = ['+', '−', '×', '÷', '=', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '%'];
+  static const _symbols = [
+    '+', '−', '×', '÷', '=',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    '%', 'π', '√', '#', '∑',
+  ];
 
   _MathParticle()
       : x = Random().nextDouble(),
         y = Random().nextDouble(),
-        speed = 0.15 + Random().nextDouble() * 0.4,
-        size = 10 + Random().nextDouble() * 14,
-        opacity = 0.03 + Random().nextDouble() * 0.07,
+        speed = 0.12 + Random().nextDouble() * 0.35,
+        size = 10 + Random().nextDouble() * 16,
+        opacity = 0.03 + Random().nextDouble() * 0.06,
         phase = Random().nextDouble() * 2 * pi,
+        rotationSpeed = (Random().nextDouble() - 0.5) * 0.8,
         symbol = _symbols[Random().nextInt(_symbols.length)];
 }
 
@@ -95,8 +101,13 @@ class _MathParticlePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final p in particles) {
       final t = (progress * p.speed + p.phase) % 1.0;
-      final px = p.x * size.width + sin(t * 2 * pi) * 25;
+      final px = p.x * size.width + sin(t * 2 * pi) * 30;
       final py = ((p.y + t * p.speed) % 1.0) * size.height;
+      final rotation = progress * p.rotationSpeed * 2 * pi;
+
+      canvas.save();
+      canvas.translate(px, py);
+      canvas.rotate(rotation);
 
       final textPainter = TextPainter(
         text: TextSpan(
@@ -111,7 +122,8 @@ class _MathParticlePainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       )..layout();
 
-      textPainter.paint(canvas, Offset(px, py));
+      textPainter.paint(canvas, Offset(-textPainter.width / 2, -textPainter.height / 2));
+      canvas.restore();
     }
   }
 

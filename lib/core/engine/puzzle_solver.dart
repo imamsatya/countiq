@@ -99,8 +99,8 @@ class PuzzleSolver {
     }
   }
 
-  /// Perform a calculation, returning null if the result is invalid
-  /// (negative, fraction, or division by zero)
+  /// Perform a calculation for the SOLVER.
+  /// Returns null if invalid OR trivial (×1, ÷1) to prune search space.
   static int? _calculate(int a, String op, int b) {
     switch (op) {
       case '+':
@@ -109,20 +109,38 @@ class PuzzleSolver {
         if (a <= b) return null; // No zero or negative results
         return a - b;
       case '×':
-        if (a <= 1 || b <= 1) return null; // Multiplying by 1 is trivial
+        if (a <= 1 || b <= 1) return null; // Solver skips trivial ×1
         return a * b;
       case '÷':
-        if (b == 0 || b == 1) return null; // No division by zero; dividing by 1 is trivial
-        if (a % b != 0) return null; // Must divide evenly
+        if (b == 0) return null;
+        if (b == 1 && a == 1) return null; // 1÷1 is trivial
+        if (a % b != 0) return null;
         return a ~/ b;
       default:
         return null;
     }
   }
 
-  /// Validate a player's step
-  /// Returns the result if valid, null if invalid
+  /// Validate a PLAYER's step.
+  /// More permissive than _calculate: allows ÷1, ×1, etc.
+  /// Only rejects truly invalid math (÷0, fractions, negatives/zero).
   static int? validateStep(int num1, String operator, int num2) {
-    return _calculate(num1, operator, num2);
+    switch (operator) {
+      case '+':
+        return num1 + num2;
+      case '-':
+        if (num1 <= num2) return null; // No zero or negative results
+        return num1 - num2;
+      case '×':
+        return num1 * num2;
+      case '÷':
+        if (num2 == 0) return null; // Division by zero
+        if (num1 % num2 != 0) return null; // Must divide evenly
+        final result = num1 ~/ num2;
+        if (result <= 0) return null; // No zero or negative
+        return result;
+      default:
+        return null;
+    }
   }
 }

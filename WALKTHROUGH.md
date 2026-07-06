@@ -1,4 +1,4 @@
-# CountiQ — Walkthrough (Phase 1 → Phase 3)
+# CountiQ — Walkthrough (Phase 1 → Phase 4)
 
 ## Summary
 Game CountiQ — number target puzzle ala "Countdown" TV show. Pemain diberikan angka target dan harus mengkombinasikan angka-angka yang tersedia dengan operasi +, −, ×, ÷ untuk mencapai target.
@@ -15,37 +15,41 @@ countiq/
 │   │   │   ├── puzzle_solver.dart                    # Brute-force recursive solver
 │   │   │   ├── puzzle_generator.dart                 # Random solvable puzzle gen
 │   │   │   └── campaign_generator.dart               # Seeded deterministic levels
+│   │   ├── l10n/
+│   │   │   └── app_strings.dart                      # EN/ID localization strings
 │   │   └── services/
 │   │       ├── daily_challenge_service.dart           # Date-seeded daily puzzle + streak
-│   │       ├── sound_service.dart                     # Haptic feedback service
+│   │       ├── sound_service.dart                     # Audio + haptic feedback
 │   │       └── achievement_service.dart               # 20 achievements, 5 categories
 │   ├── data/
 │   │   └── datasources/
-│   │       └── local_database.dart                   # Hive persistence layer
+│   │       └── local_database.dart                   # Hive persistence + resetAll()
 │   ├── domain/
 │   │   └── models/
 │   │       └── puzzle_model.dart                     # CalcStep, Solution, CountiqPuzzle
 │   └── presentation/
 │       ├── router/
-│       │   └── app_router.dart                       # GoRouter (10 routes)
+│       │   └── app_router.dart                       # GoRouter (11 routes)
 │       ├── providers/
 │       │   └── game_state_provider.dart              # Riverpod game state
 │       ├── screens/
-│       │   ├── home_screen.dart                      # Home menu
-│       │   ├── game_screen.dart                      # Quick play game
+│       │   ├── home_screen.dart                      # Home menu + entry animations
+│       │   ├── game_screen.dart                      # Quick play + solve flash
 │       │   ├── campaign_game_screen.dart             # Campaign level game
 │       │   ├── daily_challenge_screen.dart            # Daily challenge
-│       │   ├── result_screen.dart                    # Result + confetti + achievement check
+│       │   ├── time_attack_screen.dart                # 60s time attack mode
+│       │   ├── result_screen.dart                    # Result + confetti + share + star anim
 │       │   ├── level_select_screen.dart              # Level grid (5x5, paginated)
 │       │   ├── achievements_screen.dart               # Achievement gallery
 │       │   ├── how_to_play_screen.dart                # 5-page swipeable tutorial
-│       │   ├── settings_screen.dart                  # Sound/haptic/reset
-│       │   └── statistics_screen.dart                # Stats dashboard
+│       │   ├── settings_screen.dart                  # Sound/haptic/language/reset
+│       │   └── statistics_screen.dart                # Stats + Time Attack stats
 │       └── widgets/
-│           ├── particle_background.dart              # Math symbol particles
+│           ├── particle_background.dart              # Math symbol particles + rotation
 │           └── achievement_toast.dart                 # Unlock notification overlay
 ├── fonts/                                            # Poppins font family
-├── IMPLEMENTATION_PLAN.md                            # Full plan (Fase 1-3)
+├── assets/audio/                                     # pop.mp3, success.mp3, error.mp3
+├── IMPLEMENTATION_PLAN.md                            # Full plan (Fase 1-4)
 └── WALKTHROUGH.md                                    # This file
 ```
 
@@ -129,6 +133,35 @@ countiq/
 - Daily Challenge card with streak + completion
 - 4 bottom icons: Statistics, Achievements, How to Play, Settings
 
+## Phase 4 — Social, Polish & Pre-Release ✅
+
+### Share Results
+- Share button on result screen with emoji-formatted text
+- Includes target, star rating, solution steps, time, hashtags
+- `share_plus` integration for native OS share sheet
+
+### Localization (EN/ID)
+- `AppStrings` class with 100+ key-value pairs for EN and ID
+- Language toggle in Settings (🇬🇧 EN ↔ 🇮🇩 ID)
+- Persisted in Hive via `getLocale()` / `setLocale()`
+- Applied to home screen and settings screen
+
+### UX Polish
+- **Home Screen**: Staggered entry animations (logo bounce, fade+slide for title, buttons, icons)
+- **Daily Card**: Pulse glow animation when not completed today
+- **Game Screen**: Green celebration flash overlay on puzzle solve
+- **Result Screen**: Stars bounce in one-by-one (staggered elasticOut)
+- **Result Screen**: Stats counter animation (numbers count up from 0)
+- **Particles**: 25 particles with rotation, added π, √, ∑ symbols
+
+### Time Attack Stats
+- New section in Statistics screen: Best Score, Games Played, Total Solved, Avg per Game
+- Empty state prompt if no games played yet
+
+### Reset Progress Fix
+- **Bug**: Reset only cleared `settingsBox` → stats and levels were preserved
+- **Fix**: New `resetAll()` method clears all 3 Hive boxes
+
 ---
 
 ## Routes
@@ -138,6 +171,7 @@ countiq/
 | `/game/:difficulty` | Quick Play Game |
 | `/campaign/:level` | Campaign Game |
 | `/daily` | Daily Challenge |
+| `/time-attack` | Time Attack |
 | `/result` | Result Screen |
 | `/levels` | Level Select |
 | `/achievements` | Achievements |
@@ -148,15 +182,14 @@ countiq/
 ---
 
 ## Verification
-- ✅ `flutter analyze` — **0 issues**
-- ✅ `flutter run -d chrome` — running on localhost:8080
+- ✅ `flutter analyze` — **0 new issues**
+- ✅ All phases (1-4) complete
 
 ---
 
 ## What's Next
-- Sound effects with audioplayers (tap, solve, error sounds)
-- Share puzzle results to social media
 - Ad integration (AdMob)
 - IAP (Pro mode — remove ads)
-- Localization (EN/ID)
-- App store listing assets
+- App store listing assets (screenshots, descriptions)
+- More localization coverage (remaining screens)
+- Leaderboard / online competitive mode

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   late bool _soundEnabled;
   late bool _hapticEnabled;
+  late String _locale;
 
   @override
   void initState() {
@@ -20,6 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final db = LocalDatabase.instance;
     _soundEnabled = db.getSoundEnabled();
     _hapticEnabled = db.getHapticEnabled();
+    _locale = db.getLocale();
   }
 
   @override
@@ -39,11 +42,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     // Game section
-                    _buildSectionTitle('Game'),
+                    _buildSectionTitle(AppStrings.get('game')),
                     const SizedBox(height: 8),
                     _buildToggleItem(
                       icon: Icons.volume_up_rounded,
-                      label: 'Sound Effects',
+                      label: AppStrings.get('sound_effects'),
                       value: _soundEnabled,
                       onChanged: (val) {
                         setState(() => _soundEnabled = val);
@@ -53,28 +56,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 8),
                     _buildToggleItem(
                       icon: Icons.vibration_rounded,
-                      label: 'Haptic Feedback',
+                      label: AppStrings.get('haptic_feedback'),
                       value: _hapticEnabled,
                       onChanged: (val) {
                         setState(() => _hapticEnabled = val);
                         LocalDatabase.instance.setHapticEnabled(val);
                       },
                     ),
+                    const SizedBox(height: 8),
+                    _buildLanguageSelector(),
 
                     const SizedBox(height: 24),
 
                     // About section
-                    _buildSectionTitle('About'),
+                    _buildSectionTitle(AppStrings.get('about')),
                     const SizedBox(height: 8),
                     _buildInfoItem(
                       icon: Icons.info_outline_rounded,
-                      label: 'Version',
+                      label: AppStrings.get('version'),
                       value: '1.0.0',
                     ),
                     const SizedBox(height: 8),
                     _buildTapItem(
                       icon: Icons.star_border_rounded,
-                      label: 'Rate This App',
+                      label: AppStrings.get('rate_app'),
                       onTap: () {
                         // TODO: Open store page
                       },
@@ -82,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 8),
                     _buildTapItem(
                       icon: Icons.share_rounded,
-                      label: 'Share with Friends',
+                      label: AppStrings.get('share_friends'),
                       onTap: () {
                         // TODO: Share app link
                       },
@@ -91,11 +96,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Danger zone
-                    _buildSectionTitle('Data'),
+                    _buildSectionTitle(AppStrings.get('data')),
                     const SizedBox(height: 8),
                     _buildTapItem(
                       icon: Icons.delete_outline_rounded,
-                      label: 'Reset All Progress',
+                      label: AppStrings.get('reset_progress'),
                       color: AppTheme.errorColor,
                       onTap: () => _showResetDialog(),
                     ),
@@ -274,17 +279,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Reset All Progress?',
-          style: TextStyle(
+        title: Text(
+          AppStrings.get('reset_confirm_title'),
+          style: const TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
         ),
-        content: const Text(
-          'This will delete all your level progress, stars, and statistics. This action cannot be undone.',
-          style: TextStyle(
+        content: Text(
+          AppStrings.get('reset_confirm_body'),
+          style: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 13,
             color: AppTheme.textSecondary,
@@ -294,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              AppStrings.get('cancel'),
               style: TextStyle(
                 fontFamily: 'Poppins',
                 color: AppTheme.textSecondary.withValues(alpha: 0.7),
@@ -303,17 +308,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () async {
-              // Reset all boxes
+              // Reset ALL data across all boxes
               final db = LocalDatabase.instance;
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              await db.settingsBox.clear();
+              await db.resetAll();
               if (!ctx.mounted) return;
               Navigator.pop(ctx);
               if (mounted) {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
-                    content: const Text('All progress has been reset',
-                        style: TextStyle(fontFamily: 'Poppins')),
+                    content: Text(AppStrings.get('reset_done'),
+                        style: const TextStyle(fontFamily: 'Poppins')),
                     backgroundColor: AppTheme.errorColor,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
@@ -323,15 +328,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 setState(() {
                   _soundEnabled = true;
                   _hapticEnabled = true;
+                  _locale = 'en';
                 });
               }
             },
-            child: const Text(
-              'Reset',
-              style: TextStyle(
+            child: Text(
+              AppStrings.get('reset'),
+              style: const TextStyle(
                 fontFamily: 'Poppins',
                 color: AppTheme.errorColor,
                 fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSelector() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: AppTheme.glassDecoration(borderRadius: 14),
+      child: Row(
+        children: [
+          Icon(Icons.language_rounded, color: AppTheme.primaryColor, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppStrings.get('language'),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              final newLocale = _locale == 'en' ? 'id' : 'en';
+              setState(() => _locale = newLocale);
+              LocalDatabase.instance.setLocale(newLocale);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                border: Border.all(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _locale == 'en' ? '🇬🇧 EN' : '🇮🇩 ID',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.swap_horiz_rounded,
+                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
+                    size: 16,
+                  ),
+                ],
               ),
             ),
           ),

@@ -168,4 +168,25 @@ class LocalDatabase {
       await _addToStat('total_hints_used', hints);
     }
   }
+
+  // ─── Time Attack Stats ──────────────────────────────────────
+
+  int get timeAttackBest => _settingsBox.get('time_attack_best', defaultValue: 0);
+  int get timeAttackTotalGames => _settingsBox.get('time_attack_total_games', defaultValue: 0);
+  int get timeAttackTotalSolved => _settingsBox.get('time_attack_total_solved', defaultValue: 0);
+
+  // ─── Locale ─────────────────────────────────────────────────
+
+  String getLocale() => _settingsBox.get('locale', defaultValue: 'en');
+
+  Future<void> setLocale(String locale) => _settingsBox.put('locale', locale);
+
+  // ─── Reset ──────────────────────────────────────────────────
+
+  /// Reset ALL progress: settings, stats, levels, daily data.
+  Future<void> resetAll() async {
+    await _settingsBox.clear();
+    await _statsBox.clear();
+    await _levelsBox.clear();
+  }
 }

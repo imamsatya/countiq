@@ -10,6 +10,7 @@ import '../screens/statistics_screen.dart';
 import '../screens/daily_challenge_screen.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/how_to_play_screen.dart';
+import '../screens/time_attack_screen.dart';
 
 /// Smooth slide-fade transition for all routes
 CustomTransitionPage<void> _transitionPage({
@@ -85,6 +86,7 @@ final appRouter = GoRouter(
             stars: extras['stars'] ?? 1,
             difficulty: extras['difficulty'] ?? 'easy',
             target: extras['target'] ?? 0,
+            solutionSteps: extras['solutionSteps'] ?? const [],
           ),
           state: state,
           slideUp: true,
@@ -115,6 +117,11 @@ final appRouter = GoRouter(
       path: '/how-to-play',
       pageBuilder: (context, state) =>
           _transitionPage(child: const HowToPlayScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/time-attack',
+      pageBuilder: (context, state) =>
+          _transitionPage(child: const TimeAttackScreen(), state: state),
     ),
   ],
 );

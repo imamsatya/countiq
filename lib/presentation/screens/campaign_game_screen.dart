@@ -562,6 +562,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
                     'hints': _hintsUsed, 'stars': _calculateStars(),
                     'difficulty': _puzzle.difficulty, 'target': _puzzle.target,
                     'levelNumber': widget.levelNumber,
+                    'solutionSteps': List.from(_steps),
                   });
                 }
               },

@@ -20,6 +20,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
   late Animation<double> _shakeAnimation;
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+  late AnimationController _solveFlashController;
+  late Animation<double> _solveFlashAnim;
+  bool _prevSolved = false;
 
   @override
   void initState() {
@@ -39,12 +42,21 @@ class _GameScreenState extends ConsumerState<GameScreen>
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+
+    _solveFlashController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _solveFlashAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _solveFlashController, curve: Curves.easeOut),
+    );
   }
 
   @override
   void dispose() {
     _shakeController.dispose();
     _pulseController.dispose();
+    _solveFlashController.dispose();
     super.dispose();
   }
 
@@ -53,46 +65,70 @@ class _GameScreenState extends ConsumerState<GameScreen>
     final gameState = ref.watch(gameWithDifficultyProvider(widget.difficulty));
     final notifier = ref.read(gameWithDifficultyProvider(widget.difficulty).notifier);
 
+    // Trigger solve flash when puzzle is just solved
+    if (gameState.isSolved && !_prevSolved) {
+      _prevSolved = true;
+      _solveFlashController.forward().then((_) => _solveFlashController.reverse());
+    }
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(gameState),
-              const SizedBox(height: 8),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Header
+                  _buildHeader(gameState),
+                  const SizedBox(height: 8),
 
-              // Target display
-              _buildTargetDisplay(gameState),
-              const SizedBox(height: 12),
+                  // Target display
+                  _buildTargetDisplay(gameState),
+                  const SizedBox(height: 12),
 
-              // Steps history
-              Expanded(
-                flex: 3,
-                child: _buildStepsHistory(gameState),
+                  // Steps history
+                  Expanded(
+                    flex: 3,
+                    child: _buildStepsHistory(gameState),
+                  ),
+
+                  // Error message
+                  if (gameState.errorMessage != null)
+                    _buildErrorBanner(gameState.errorMessage!),
+
+                  const SizedBox(height: 8),
+
+                  // Number tiles
+                  _buildNumberTiles(gameState, notifier),
+                  const SizedBox(height: 12),
+
+                  // Operator buttons
+                  _buildOperatorButtons(gameState, notifier),
+                  const SizedBox(height: 12),
+
+                  // Action buttons
+                  _buildActionButtons(gameState, notifier),
+                  const SizedBox(height: 16),
+                ],
               ),
-
-              // Error message
-              if (gameState.errorMessage != null)
-                _buildErrorBanner(gameState.errorMessage!),
-
-              const SizedBox(height: 8),
-
-              // Number tiles
-              _buildNumberTiles(gameState, notifier),
-              const SizedBox(height: 12),
-
-              // Operator buttons
-              _buildOperatorButtons(gameState, notifier),
-              const SizedBox(height: 12),
-
-              // Action buttons
-              _buildActionButtons(gameState, notifier),
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
-        ),
+          // Celebration flash overlay
+          if (gameState.isSolved)
+            AnimatedBuilder(
+              animation: _solveFlashAnim,
+              builder: (context, _) {
+                return IgnorePointer(
+                  child: Container(
+                    color: AppTheme.successColor.withValues(
+                      alpha: _solveFlashAnim.value * 0.15,
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
@@ -659,6 +695,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     'stars': gameState.calculateStars(),
                     'difficulty': widget.difficulty,
                     'target': gameState.puzzle.target,
+                    'solutionSteps': List.from(gameState.steps),
                   });
                 } else {
                   // Skip to new puzzle

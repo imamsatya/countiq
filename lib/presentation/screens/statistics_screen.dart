@@ -127,6 +127,78 @@ class StatisticsScreen extends StatelessWidget {
                       wide: true,
                     ),
 
+                    const SizedBox(height: 24),
+
+                    // Time Attack
+                    _buildSectionTitle('Time Attack'),
+                    const SizedBox(height: 10),
+                    if (db.timeAttackTotalGames > 0) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              icon: Icons.bolt_rounded,
+                              value: '${db.timeAttackBest}',
+                              label: 'Best Score',
+                              color: Colors.orange,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _buildStatCard(
+                              icon: Icons.sports_esports_rounded,
+                              value: '${db.timeAttackTotalGames}',
+                              label: 'Games Played',
+                              color: AppTheme.secondaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              icon: Icons.check_circle_outline_rounded,
+                              value: '${db.timeAttackTotalSolved}',
+                              label: 'Total Solved',
+                              color: AppTheme.successColor,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _buildStatCard(
+                              icon: Icons.trending_up_rounded,
+                              value: db.timeAttackTotalGames > 0
+                                  ? (db.timeAttackTotalSolved / db.timeAttackTotalGames).toStringAsFixed(1)
+                                  : '0',
+                              label: 'Avg per Game',
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                        decoration: AppTheme.glassDecoration(borderRadius: 16),
+                        child: Column(
+                          children: [
+                            const Text('⚡', style: TextStyle(fontSize: 28)),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Play Time Attack to see your stats here!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.textMuted.withValues(alpha: 0.6),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+
                     const SizedBox(height: 32),
                   ],
                 ),
