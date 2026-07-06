@@ -15,6 +15,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late bool _soundEnabled;
   late bool _hapticEnabled;
   late String _locale;
+  int _devTapCount = 0;
+  bool _devModeUnlocked = false;
 
   @override
   void initState() {
@@ -71,11 +73,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // About section
                     _buildSectionTitle(AppStrings.get('about')),
                     const SizedBox(height: 8),
-                    _buildInfoItem(
-                      icon: Icons.info_outline_rounded,
-                      label: AppStrings.get('version'),
-                      value: '1.0.0',
-                    ),
+                    _buildVersionItem(),
+                    if (_devModeUnlocked) ...[
+                      const SizedBox(height: 8),
+                      _buildTapItem(
+                        icon: Icons.developer_mode_rounded,
+                        label: 'Dev Mode',
+                        color: Colors.orange,
+                        onTap: () => context.push('/dev'),
+                      ),
+                    ],
                     const SizedBox(height: 8),
                     _buildTapItem(
                       icon: Icons.star_border_rounded,
@@ -206,39 +213,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildInfoItem({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: AppTheme.glassDecoration(borderRadius: 14),
-      child: Row(
-        children: [
-          Icon(icon, color: AppTheme.primaryColor, size: 22),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 13,
-              color: AppTheme.textSecondary.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildTapItem({
     required IconData icon,
@@ -401,6 +376,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVersionItem() {
+    return GestureDetector(
+      onTap: () {
+        _devTapCount++;
+        if (_devTapCount >= 5 && !_devModeUnlocked) {
+          setState(() => _devModeUnlocked = true);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('🔧 Dev Mode unlocked!',
+                  style: TextStyle(fontFamily: 'Poppins')),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: AppTheme.glassDecoration(borderRadius: 14),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline_rounded, color: AppTheme.primaryColor, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                AppStrings.get('version'),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Text(
+              '1.0.0',
+              style: TextStyle(
+                fontSize: 13,
+                color: AppTheme.textSecondary.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

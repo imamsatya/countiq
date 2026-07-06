@@ -11,6 +11,7 @@ import '../screens/daily_challenge_screen.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/how_to_play_screen.dart';
 import '../screens/time_attack_screen.dart';
+import '../screens/dev_mode_screen.dart';
 
 /// Smooth slide-fade transition for all routes
 CustomTransitionPage<void> _transitionPage({
@@ -53,8 +54,12 @@ final appRouter = GoRouter(
       path: '/game/:difficulty',
       pageBuilder: (context, state) {
         final difficulty = state.pathParameters['difficulty'] ?? 'easy';
+        // Use a unique key so re-navigation always creates a fresh game
         return _transitionPage(
-          child: GameScreen(difficulty: difficulty),
+          child: GameScreen(
+            key: ValueKey('game_${difficulty}_${DateTime.now().millisecondsSinceEpoch}'),
+            difficulty: difficulty,
+          ),
           state: state,
         );
       },
@@ -122,6 +127,11 @@ final appRouter = GoRouter(
       path: '/time-attack',
       pageBuilder: (context, state) =>
           _transitionPage(child: const TimeAttackScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/dev',
+      pageBuilder: (context, state) =>
+          _transitionPage(child: const DevModeScreen(), state: state),
     ),
   ],
 );

@@ -68,7 +68,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
     // Trigger solve flash when puzzle is just solved
     if (gameState.isSolved && !_prevSolved) {
       _prevSolved = true;
-      _solveFlashController.forward().then((_) => _solveFlashController.reverse());
+      _solveFlashController.forward().then((_) {
+        if (mounted) _solveFlashController.reverse();
+      });
+    } else if (!gameState.isSolved && _prevSolved) {
+      // Reset when we get a new unsolved puzzle
+      _prevSolved = false;
+      _solveFlashController.reset();
     }
 
     return Scaffold(
