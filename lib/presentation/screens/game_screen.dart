@@ -313,7 +313,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap a number to start',
+              AppStrings.get('tap_a_number_to_start'),
               style: TextStyle(
                 fontSize: 13,
                 color: AppTheme.textMuted.withValues(alpha: 0.5),
@@ -621,7 +621,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                         color: AppTheme.primaryColor, size: 20),
                     const SizedBox(width: 6),
                     Text(
-                      'Hint',
+                      AppStrings.get('hint'),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

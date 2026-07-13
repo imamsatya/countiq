@@ -104,13 +104,13 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
     if (result == null) {
       setState(() {
         if (_selectedOperator == '÷' && b == 0) {
-          _errorMessage = 'Cannot divide by zero';
+          _errorMessage = AppStrings.get('cannot_divide_by_zero');
         } else if (_selectedOperator == '÷') {
-          _errorMessage = '$a ÷ $b is not a whole number';
+          _errorMessage = '$a ÷ $b ${AppStrings.get('not_a_whole_number')}';
         } else if (_selectedOperator == '-') {
-          _errorMessage = '$a − $b would be negative or zero';
+          _errorMessage = '$a − $b ${AppStrings.get('negative_or_zero')}';
         } else {
-          _errorMessage = 'Invalid operation';
+          _errorMessage = AppStrings.get('invalid_operation');
         }
         _selectedFirstIndex = null;
         _selectedOperator = null;
@@ -362,7 +362,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
             Icon(Icons.touch_app_rounded,
                 color: AppTheme.textMuted.withValues(alpha: 0.3), size: 36),
             const SizedBox(height: 8),
-            Text('Tap a number to start',
+            Text(AppStrings.get('tap_a_number_to_start'),
                 style: TextStyle(
                     fontSize: 13,
                     color: AppTheme.textMuted.withValues(alpha: 0.5))),
@@ -663,7 +663,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
                                     color: Colors.white, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
-                                    'Try: ${step.num1} ${step.operator} ${step.num2}',
+                                    '${AppStrings.get('try_msg')}: ${step.num1} ${step.operator} ${step.num2}',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w500)),
                               ]),
@@ -687,7 +687,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
                       Icon(Icons.lightbulb_outline_rounded,
                           color: AppTheme.primaryColor, size: 20),
                       const SizedBox(width: 6),
-                      Text('Hint',
+                      Text(AppStrings.get('hint'),
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

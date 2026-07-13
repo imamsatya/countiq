@@ -177,13 +177,13 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
       SoundService.instance.playError();
       setState(() {
         if (_selectedOperator == '÷' && b == 0) {
-          _errorMessage = 'Cannot divide by zero';
+          _errorMessage = AppStrings.get('cannot_divide_by_zero');
         } else if (_selectedOperator == '÷') {
-          _errorMessage = '$a ÷ $b is not whole';
+          _errorMessage = '$a ÷ $b ${AppStrings.get('not_a_whole_number')}';
         } else if (_selectedOperator == '-') {
-          _errorMessage = '$a − $b is negative';
+          _errorMessage = '$a − $b ${AppStrings.get('negative_or_zero')}';
         } else {
-          _errorMessage = 'Invalid';
+          _errorMessage = AppStrings.get('invalid_operation');
         }
         _selectedFirstIndex = null;
         _selectedOperator = null;
@@ -743,7 +743,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
             Icon(Icons.touch_app_rounded,
                 color: AppTheme.textMuted.withValues(alpha: 0.3), size: 32),
             const SizedBox(height: 6),
-            Text('Tap a number to start',
+            Text(AppStrings.get('tap_a_number_to_start'),
                 style: TextStyle(
                     fontSize: 12,
                     color: AppTheme.textMuted.withValues(alpha: 0.5))),

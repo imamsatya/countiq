@@ -106,13 +106,13 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
     if (result == null) {
       setState(() {
         if (_selectedOperator == '÷' && b == 0) {
-          _errorMessage = 'Cannot divide by zero';
+          _errorMessage = AppStrings.get('cannot_divide_by_zero');
         } else if (_selectedOperator == '÷') {
-          _errorMessage = '$a ÷ $b is not a whole number';
+          _errorMessage = '$a ÷ $b ${AppStrings.get('not_a_whole_number')}';
         } else if (_selectedOperator == '-') {
-          _errorMessage = '$a − $b would be negative or zero';
+          _errorMessage = '$a − $b ${AppStrings.get('negative_or_zero')}';
         } else {
-          _errorMessage = 'Invalid operation';
+          _errorMessage = AppStrings.get('invalid_operation');
         }
         _selectedFirstIndex = null;
         _selectedOperator = null;
@@ -248,7 +248,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Level ${widget.levelNumber}',
+                Text('${AppStrings.get('level')} ${widget.levelNumber}',
                     style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
                 const SizedBox(width: 8),
                 Container(
@@ -341,7 +341,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
           children: [
             Icon(Icons.touch_app_rounded, color: AppTheme.textMuted.withValues(alpha: 0.3), size: 36),
             const SizedBox(height: 8),
-            Text('Tap a number to start',
+            Text(AppStrings.get('tap_a_number_to_start'),
                 style: TextStyle(fontSize: 13, color: AppTheme.textMuted.withValues(alpha: 0.5))),
           ],
         ),
@@ -510,7 +510,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
                     content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Icon(Icons.lightbulb_outline_rounded, color: Colors.white, size: 18),
                       const SizedBox(width: 8),
-                      Text('Try: ${step.num1} ${step.operator} ${step.num2}', style: const TextStyle(fontWeight: FontWeight.w500)),
+                      Text('${AppStrings.get('try_msg')}: ${step.num1} ${step.operator} ${step.num2}', style: const TextStyle(fontWeight: FontWeight.w500)),
                     ]),
                     backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.9),
                     behavior: SnackBarBehavior.floating,
@@ -525,7 +525,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Icon(Icons.lightbulb_outline_rounded, color: AppTheme.primaryColor, size: 20),
                   const SizedBox(width: 6),
-                  Text('Hint', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.primaryColor)),
+                  Text(AppStrings.get('hint'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.primaryColor)),
                 ]),
               ),
             ),

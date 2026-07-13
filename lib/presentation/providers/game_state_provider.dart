@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/puzzle_model.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/engine/puzzle_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
 import '../../core/services/sound_service.dart';
@@ -198,13 +199,13 @@ class GameStateNotifier extends StateNotifier<GameState> {
       // Invalid operation
       String errMsg;
       if (op == '÷' && b == 0) {
-        errMsg = 'Cannot divide by zero';
+        errMsg = AppStrings.get('cannot_divide_by_zero');
       } else if (op == '÷') {
-        errMsg = '$a ÷ $b is not a whole number';
+        errMsg = '$a ÷ $b ${AppStrings.get('not_a_whole_number')}';
       } else if (op == '-') {
-        errMsg = '$a − $b would be negative or zero';
+        errMsg = '$a − $b ${AppStrings.get('negative_or_zero')}';
       } else {
-        errMsg = 'Invalid operation';
+        errMsg = AppStrings.get('invalid_operation');
       }
       SoundService.instance.playError();
       state = state.copyWith(
@@ -307,7 +308,7 @@ class GameStateNotifier extends StateNotifier<GameState> {
     if (hintIndex < 0 || hintIndex >= solution.steps.length) return null;
 
     final step = solution.steps[hintIndex];
-    return 'Try: ${step.num1} ${step.operator} ${step.num2}';
+    return '${AppStrings.get('try_msg')}: ${step.num1} ${step.operator} ${step.num2}';
   }
 
   /// Reset the current puzzle

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 
 class LevelSelectScreen extends StatefulWidget {
@@ -76,8 +77,8 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: AppTheme.glassDecoration(borderRadius: 12),
-            child: const Text(
-              'SELECT LEVEL',
+            child: Text(
+              AppStrings.get('select_level').toUpperCase(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -262,7 +263,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                       size: 20),
                   const SizedBox(width: 4),
                   Text(
-                    'Prev',
+                    AppStrings.get('prev'),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -276,7 +277,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
             ),
           ),
           Text(
-            'Page ${_currentPage + 1} of $maxPages',
+            '${AppStrings.get('page')} ${_currentPage + 1} ${AppStrings.get('of')} $maxPages',
             style: TextStyle(
               fontSize: 12,
               color: AppTheme.textSecondary.withValues(alpha: 0.7),
@@ -293,7 +294,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Next',
+                    AppStrings.get('next'),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,

@@ -7,6 +7,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/services/achievement_service.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../widgets/achievement_toast.dart';
+import '../../core/l10n/app_strings.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   final int timeSeconds;
@@ -147,8 +148,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                       child: ShaderMask(
                         shaderCallback: (bounds) =>
                             AppTheme.primaryGradient.createShader(bounds),
-                        child: const Text(
-                          'PUZZLE SOLVED!',
+                        child: Text(
+                          AppStrings.get('puzzle_solved').toUpperCase(),
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -160,7 +161,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Target: ${widget.target}',
+                      '${AppStrings.get('target')}: ${widget.target}',
                       style: TextStyle(
                         fontSize: 16,
                         color: AppTheme.textSecondary.withValues(alpha: 0.7),
@@ -186,7 +187,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                         Expanded(
                           child: _buildSecondaryButton(
                             icon: Icons.share_rounded,
-                            label: 'Share',
+                            label: AppStrings.get('share'),
                             color: AppTheme.primaryColor,
                             onTap: _shareResult,
                           ),
@@ -195,7 +196,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                         Expanded(
                           child: _buildSecondaryButton(
                             icon: Icons.replay_rounded,
-                            label: 'Replay',
+                            label: AppStrings.get('replay'),
                             onTap: () {
                               context.pop();
                             },
@@ -205,7 +206,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                         Expanded(
                           child: _buildSecondaryButton(
                             icon: Icons.home_rounded,
-                            label: 'Home',
+                            label: AppStrings.get('home'),
                             onTap: () => context.go('/'),
                           ),
                         ),
@@ -280,7 +281,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
         Expanded(
           child: _buildStatCard(
             icon: Icons.timer_outlined,
-            label: 'Time',
+            label: AppStrings.get('time'),
             value: _formatTime(widget.timeSeconds),
           ),
         ),
@@ -288,7 +289,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
         Expanded(
           child: _buildStatCard(
             icon: Icons.format_list_numbered_rounded,
-            label: 'Steps',
+            label: AppStrings.get('steps'),
             value: '${widget.stepsCount}',
           ),
         ),
@@ -296,7 +297,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
         Expanded(
           child: _buildStatCard(
             icon: Icons.lightbulb_outline_rounded,
-            label: 'Hints',
+            label: AppStrings.get('hints'),
             value: '${widget.hintsUsed}',
           ),
         ),
@@ -379,13 +380,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: AppTheme.primaryGlowDecoration(borderRadius: 20),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.play_arrow_rounded, color: Color(0xFF0A0E1A), size: 26),
-            SizedBox(width: 8),
+            const Icon(Icons.play_arrow_rounded, color: Color(0xFF0A0E1A), size: 26),
+            const SizedBox(width: 8),
             Text(
-              'NEXT PUZZLE',
+              AppStrings.get('next_puzzle').toUpperCase(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -402,7 +403,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
   void _shareResult() {
     final starEmoji = '⭐' * (widget.stars > 0 ? widget.stars : 1);
     final buffer = StringBuffer();
-    buffer.writeln('🧮 CountiQ — Target: ${widget.target} $starEmoji');
+    buffer.writeln('🧮 ${AppStrings.appName} — ${AppStrings.get('target')}: ${widget.target} $starEmoji');
     buffer.writeln();
     if (widget.solutionSteps.isNotEmpty) {
       for (int i = 0; i < widget.solutionSteps.length; i++) {
@@ -413,14 +414,14 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
       }
       buffer.writeln();
     }
-    buffer.write('⏱ ${_formatTime(widget.timeSeconds)} | ${widget.stepsCount} steps');
+    buffer.write('⏱ ${_formatTime(widget.timeSeconds)} | ${widget.stepsCount} ${AppStrings.get('steps').toLowerCase()}');
     if (widget.hintsUsed == 0) {
-      buffer.write(' | No hints!');
+      buffer.write(' | ${AppStrings.get('no_hints')}');
     } else {
-      buffer.write(' | ${widget.hintsUsed} hint${widget.hintsUsed > 1 ? 's' : ''}');
+      buffer.write(' | ${widget.hintsUsed} ${AppStrings.get('hints_used')}');
     }
     buffer.writeln();
-    buffer.write('\nCan you solve it? #CountiQ #MathPuzzle');
+    buffer.write('\n${AppStrings.get('can_you_solve_it')} #${AppStrings.appName} #MathPuzzle');
 
     SharePlus.instance.share(
       ShareParams(text: buffer.toString()),

@@ -278,25 +278,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           children: [
                             _buildIconButton(
                               icon: Icons.bar_chart_rounded,
-                              tooltip: 'Statistics',
+                              tooltip: AppStrings.get('statistics'),
                               onTap: () => context.push('/statistics'),
                             ),
                             const SizedBox(width: 16),
                             _buildIconButton(
                               icon: Icons.emoji_events_rounded,
-                              tooltip: 'Achievements',
+                              tooltip: AppStrings.get('achievements'),
                               onTap: () => context.push('/achievements'),
                             ),
                             const SizedBox(width: 16),
                             _buildIconButton(
                               icon: Icons.help_outline_rounded,
-                              tooltip: 'How to Play',
+                              tooltip: AppStrings.get('how_to_play'),
                               onTap: () => context.push('/how-to-play'),
                             ),
                             const SizedBox(width: 16),
                             _buildIconButton(
                               icon: Icons.settings_rounded,
-                              tooltip: 'Settings',
+                              tooltip: AppStrings.get('settings'),
                               onTap: () => context.push('/settings'),
                             ),
                           ],
@@ -512,7 +512,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             const SizedBox(width: 8),
             Text(
-              isResume ? 'CONTINUE Level $nextLevel' : AppStrings.play,
+              isResume ? '${AppStrings.get('continue_level')} $nextLevel' : AppStrings.play,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -562,13 +562,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             color: Colors.orange.withValues(alpha: 0.3),
           ),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('⚡', style: TextStyle(fontSize: 14)),
-            SizedBox(width: 6),
+            const Text('⚡', style: TextStyle(fontSize: 14)),
+            const SizedBox(width: 6),
             Text(
-              'Time Attack',
+              AppStrings.get('time_attack'),
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
