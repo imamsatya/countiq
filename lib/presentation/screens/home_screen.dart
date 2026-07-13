@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/engine/campaign_generator.dart';
 import '../../data/datasources/local_database.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../widgets/particle_background.dart';
@@ -496,11 +497,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _buildCampaignButton(BuildContext context, int highestLevel) {
-    final nextLevel = highestLevel + 1;
+    final nextLevel = (highestLevel + 1).clamp(1, CampaignGenerator.totalLevels);
     final isResume = highestLevel > 0;
+    final isCompleted = highestLevel >= CampaignGenerator.totalLevels;
 
     return GestureDetector(
-      onTap: () => context.push('/campaign/$nextLevel'),
+      onTap: isCompleted
+          ? () => context.push('/levels')
+          : () => context.push('/campaign/$nextLevel'),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18),
@@ -509,13 +513,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isResume ? Icons.play_arrow_rounded : Icons.play_arrow_rounded,
+              isCompleted ? Icons.emoji_events_rounded : Icons.play_arrow_rounded,
               color: const Color(0xFF0A0E1A),
               size: 28,
             ),
             const SizedBox(width: 8),
             Text(
-              isResume ? '${AppStrings.get('continue_level')} $nextLevel' : AppStrings.play,
+              isCompleted
+                  ? '${AppStrings.get('campaign')} ✓'
+                  : isResume
+                      ? '${AppStrings.get('continue_level')} $nextLevel'
+                      : AppStrings.play,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

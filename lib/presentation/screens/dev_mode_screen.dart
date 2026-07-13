@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/engine/campaign_generator.dart';
 import '../../data/datasources/local_database.dart';
 
 /// Developer mode screen for testing and reviewing all levels.
@@ -265,12 +266,12 @@ class _DevModeScreenState extends State<DevModeScreen> {
                     const SizedBox(height: 8),
                     _buildNavButton(
                       icon: Icons.add_chart_rounded,
-                      label: 'Unlock All Levels (set progress to 100)',
+                      label: 'Unlock All Levels (set progress to ${CampaignGenerator.totalLevels})',
                       color: AppTheme.successColor,
                       onTap: () async {
                         final db = LocalDatabase.instance;
                         final messenger = ScaffoldMessenger.of(context);
-                        for (int i = 1; i <= 100; i++) {
+                        for (int i = 1; i <= CampaignGenerator.totalLevels; i++) {
                           await db.saveLevelCompletion(
                             levelNumber: i,
                             stars: 3,
@@ -281,7 +282,7 @@ class _DevModeScreenState extends State<DevModeScreen> {
                         }
                         messenger.showSnackBar(
                           SnackBar(
-                            content: const Text('✅ All 100 levels unlocked with 3 stars'),
+                            content: Text('✅ All ${CampaignGenerator.totalLevels} levels unlocked with 3 stars'),
                             backgroundColor: AppTheme.successColor,
                             behavior: SnackBarBehavior.floating,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/engine/campaign_generator.dart';
 import '../../data/datasources/local_database.dart';
 import '../providers/locale_provider.dart';
 
@@ -15,9 +16,27 @@ class LevelSelectScreen extends ConsumerStatefulWidget {
 }
 
 class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
-  static const int totalLevels = 100;
   static const int levelsPerPage = 25;
+  int _selectedTierIndex = 0;
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-select the tier the player is currently on
+    final highestCompleted = LocalDatabase.instance.getHighestCompletedLevel();
+    final nextLevel = highestCompleted + 1;
+    for (int i = 0; i < CampaignGenerator.tiers.length; i++) {
+      final tier = CampaignGenerator.tiers[i];
+      if (nextLevel >= tier.startLevel && nextLevel <= tier.endLevel) {
+        _selectedTierIndex = i;
+        // Set page to the one containing the next level
+        final levelInTier = nextLevel - tier.startLevel;
+        _currentPage = levelInTier ~/ levelsPerPage;
+        break;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +44,12 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
     final db = LocalDatabase.instance;
     final totalCompleted = db.getCompletedLevelsCount();
     final totalStars = db.getTotalStars();
-    final maxPages = (totalLevels / levelsPerPage).ceil();
+    final tier = CampaignGenerator.tiers[_selectedTierIndex];
+    final maxPages = (tier.levelCount / levelsPerPage).ceil();
+
+    // Clamp current page
+    if (_currentPage >= maxPages) _currentPage = maxPages - 1;
+    if (_currentPage < 0) _currentPage = 0;
 
     return Scaffold(
       body: Container(
@@ -37,18 +61,24 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
               _buildHeader(context, totalCompleted, totalStars),
               const SizedBox(height: 8),
 
+              // Tier selector (horizontal scrollable chips)
+              _buildTierSelector(db),
+              const SizedBox(height: 8),
+
               // Page indicator
-              _buildPageIndicator(maxPages),
-              const SizedBox(height: 12),
+              if (maxPages > 1) ...[
+                _buildPageIndicator(maxPages),
+                const SizedBox(height: 8),
+              ],
 
               // Level grid
               Expanded(
-                child: _buildLevelGrid(db),
+                child: _buildLevelGrid(db, tier),
               ),
 
               // Page navigation
-              _buildPageNav(maxPages),
-              const SizedBox(height: 16),
+              if (maxPages > 1) _buildPageNav(maxPages),
+              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -82,7 +112,7 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
             decoration: AppTheme.glassDecoration(borderRadius: 12),
             child: Text(
               AppStrings.get('select_level').toUpperCase(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -117,7 +147,111 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
     );
   }
 
+  Widget _buildTierSelector(LocalDatabase db) {
+    final highestCompleted = db.getHighestCompletedLevel();
+
+    return SizedBox(
+      height: 42,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemCount: CampaignGenerator.tiers.length,
+        itemBuilder: (context, index) {
+          final tier = CampaignGenerator.tiers[index];
+          final isSelected = index == _selectedTierIndex;
+          // A tier is unlocked if the player has reached at least the first level of that tier
+          final isTierUnlocked = highestCompleted >= tier.startLevel - 1;
+          // Count completed levels in this tier
+          int tierCompleted = 0;
+          for (int lv = tier.startLevel; lv <= tier.endLevel; lv++) {
+            if (db.getLevelStars(lv) > 0) tierCompleted++;
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: GestureDetector(
+              onTap: isTierUnlocked
+                  ? () => setState(() {
+                        _selectedTierIndex = index;
+                        _currentPage = 0;
+                      })
+                  : null,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: isSelected
+                      ? AppTheme.primaryColor.withValues(alpha: 0.2)
+                      : isTierUnlocked
+                          ? AppTheme.surfaceColor.withValues(alpha: 0.5)
+                          : AppTheme.surfaceColor.withValues(alpha: 0.2),
+                  border: Border.all(
+                    color: isSelected
+                        ? AppTheme.primaryColor.withValues(alpha: 0.6)
+                        : isTierUnlocked
+                            ? Colors.white.withValues(alpha: 0.1)
+                            : Colors.white.withValues(alpha: 0.03),
+                    width: isSelected ? 1.5 : 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(tier.emoji, style: const TextStyle(fontSize: 14)),
+                    const SizedBox(width: 6),
+                    Text(
+                      tier.name,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                        color: !isTierUnlocked
+                            ? AppTheme.textMuted.withValues(alpha: 0.3)
+                            : isSelected
+                                ? AppTheme.primaryColor
+                                : Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                    if (isTierUnlocked && tierCompleted > 0) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        '$tierCompleted/${tier.levelCount}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppTheme.textSecondary.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                    if (!isTierUnlocked) ...[
+                      const SizedBox(width: 4),
+                      Icon(Icons.lock_rounded,
+                          color: AppTheme.textMuted.withValues(alpha: 0.3),
+                          size: 12),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildPageIndicator(int maxPages) {
+    // For many pages, show a compact indicator
+    if (maxPages > 10) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          '${AppStrings.get('page')} ${_currentPage + 1} ${AppStrings.get('of')} $maxPages',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppTheme.textSecondary.withValues(alpha: 0.7),
+          ),
+        ),
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(maxPages, (index) {
@@ -137,9 +271,9 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
     );
   }
 
-  Widget _buildLevelGrid(LocalDatabase db) {
-    final startLevel = _currentPage * levelsPerPage + 1;
-    final endLevel = (startLevel + levelsPerPage - 1).clamp(1, totalLevels);
+  Widget _buildLevelGrid(LocalDatabase db, CampaignTier tier) {
+    final startLevel = tier.startLevel + _currentPage * levelsPerPage;
+    final endLevel = (startLevel + levelsPerPage - 1).clamp(tier.startLevel, tier.endLevel);
     final highestCompleted = db.getHighestCompletedLevel();
 
     return Padding(

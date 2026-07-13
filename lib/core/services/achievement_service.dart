@@ -85,6 +85,34 @@ class AchievementService {
       icon: '👑',
       category: AchievementCategory.campaign,
     ),
+    Achievement(
+      id: 'campaign_200',
+      title: AchievementStrings.get('ach_title_campaign_200'),
+      description: AchievementStrings.get('ach_desc_campaign_200'),
+      icon: '⚔️',
+      category: AchievementCategory.campaign,
+    ),
+    Achievement(
+      id: 'campaign_500',
+      title: AchievementStrings.get('ach_title_campaign_500'),
+      description: AchievementStrings.get('ach_desc_campaign_500'),
+      icon: '🔥',
+      category: AchievementCategory.campaign,
+    ),
+    Achievement(
+      id: 'campaign_800',
+      title: AchievementStrings.get('ach_title_campaign_800'),
+      description: AchievementStrings.get('ach_desc_campaign_800'),
+      icon: '🌟',
+      category: AchievementCategory.campaign,
+    ),
+    Achievement(
+      id: 'campaign_1200',
+      title: AchievementStrings.get('ach_title_campaign_1200'),
+      description: AchievementStrings.get('ach_desc_campaign_1200'),
+      icon: '💎',
+      category: AchievementCategory.campaign,
+    ),
 
     // Quick Play
     Achievement(
@@ -239,6 +267,18 @@ class AchievementService {
     }
     if (completedLevels >= 100 && await unlock('campaign_100')) {
       newly.add(_find('campaign_100'));
+    }
+    if (completedLevels >= 200 && await unlock('campaign_200')) {
+      newly.add(_find('campaign_200'));
+    }
+    if (completedLevels >= 500 && await unlock('campaign_500')) {
+      newly.add(_find('campaign_500'));
+    }
+    if (completedLevels >= 800 && await unlock('campaign_800')) {
+      newly.add(_find('campaign_800'));
+    }
+    if (completedLevels >= 1200 && await unlock('campaign_1200')) {
+      newly.add(_find('campaign_1200'));
     }
 
     // Quick Play

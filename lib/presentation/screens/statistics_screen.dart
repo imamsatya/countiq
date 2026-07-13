@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/engine/campaign_generator.dart';
 import '../../data/datasources/local_database.dart';
 import '../providers/locale_provider.dart';
 
@@ -370,7 +371,7 @@ class StatisticsScreen extends ConsumerWidget {
 
   Widget _buildProgressCard(LocalDatabase db) {
     final completed = db.getCompletedLevelsCount();
-    const total = 100;
+    final total = CampaignGenerator.totalLevels;
     final progress = total > 0 ? completed / total : 0.0;
 
     return Container(

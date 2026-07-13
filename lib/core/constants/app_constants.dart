@@ -16,11 +16,13 @@ class AppConstants {
   static const bool devUnlockAllLevels = true; // Unlock all campaign levels for testing
 
   // Game Config
-  static const int totalCampaignLevels = 100;
-  static const int easyLevels = 20; // Levels 1-20
-  static const int mediumLevels = 30; // Levels 21-50
-  static const int hardLevels = 30; // Levels 51-80
-  static const int expertLevels = 20; // Levels 81-100
+  static const int totalCampaignLevels = 1200;
+  static const int tutorialLevels = 50;   // Levels 1-50
+  static const int easyLevels = 150;      // Levels 51-200
+  static const int mediumLevels = 300;    // Levels 201-500
+  static const int hardLevels = 300;      // Levels 501-800
+  static const int expertLevels = 300;    // Levels 801-1100
+  static const int masterLevels = 100;    // Levels 1101-1200
 
   // Numbers Config
   static const List<int> bigNumbers = [25, 50, 75, 100];
