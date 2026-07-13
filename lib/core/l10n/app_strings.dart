@@ -184,6 +184,12 @@ class AppStrings {
     },
     'onboarding_letsgo': {'en': "LET'S GO!", 'id': 'AYO MAIN!', 'es': '¡VAMOS!', 'pt': 'VAMOS!', 'de': 'LOS GEHT\'S!', 'fr': 'C\'EST PARTI !', 'ja': 'レッツゴー！', 'ko': '시작하기!', 'zh': '开始！', 'hi': 'शुरू करें!', 'ar': 'لننطلق!'},
     'onboarding_skip': {'en': 'Skip', 'id': 'Lewati', 'es': 'Saltar', 'pt': 'Pular', 'de': 'Überspringen', 'fr': 'Passer', 'ja': 'スキップ', 'ko': '건너뛰기', 'zh': '跳过', 'hi': 'छोड़ें', 'ar': 'تخطي'},
+    'beginner': {'en': 'Beginner', 'id': 'Pemula', 'es': 'Principiante', 'pt': 'Iniciante', 'de': 'Anfänger', 'fr': 'Débutant', 'ja': '初心者', 'ko': '초보자', 'zh': '新手', 'hi': 'शुरुआती', 'ar': 'مبتدئ'},
+    'campaign': {'en': 'Campaign', 'id': 'Kampanye', 'es': 'Campaña', 'pt': 'Campanha', 'de': 'Kampagne', 'fr': 'Campagne', 'ja': 'キャンペーン', 'ko': '캠페인', 'zh': '战役', 'hi': 'अभियान', 'ar': 'حملة'},
+    'mastery': {'en': 'Mastery', 'id': 'Penguasaan', 'es': 'Maestría', 'pt': 'Maestria', 'de': 'Meisterschaft', 'fr': 'Maîtrise', 'ja': 'マスター', 'ko': '마스터리', 'zh': '精通', 'hi': 'महारत', 'ar': 'إتقان'},
+    'other': {'en': 'Other', 'id': 'Lainnya', 'es': 'Otro', 'pt': 'Outro', 'de': 'Andere', 'fr': 'Autre', 'ja': 'その他', 'ko': '기타', 'zh': '其他', 'hi': 'अन्य', 'ar': 'أخرى'},
+    'unlocked': {'en': 'Unlocked', 'id': 'Terbuka', 'es': 'Desbloqueado', 'pt': 'Desbloqueado', 'de': 'Freigeschaltet', 'fr': 'Débloqué', 'ja': 'ロック解除', 'ko': '잠금 해제됨', 'zh': '已解锁', 'hi': 'अनलॉक किया गया', 'ar': 'مفتوح'},
+    'no_achievements_yet': {'en': 'No achievements yet.', 'id': 'Belum ada pencapaian.', 'es': 'Aún no hay logros.', 'pt': 'Nenhuma conquista ainda.', 'de': 'Noch keine Erfolge.', 'fr': 'Aucune réalisation pour le moment.', 'ja': 'まだ実績がありません。', 'ko': '아직 업적이 없습니다.', 'zh': '暂无成就。', 'hi': 'अभी कोई उपलब्धि नहीं।', 'ar': 'لا إنجازات بعد.'},
   };
 
   static String get(String key) {

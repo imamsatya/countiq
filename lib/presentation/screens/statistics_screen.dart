@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class StatisticsScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     // Overview
-                    _buildSectionTitle('Overview'),
+                    _buildSectionTitle(AppStrings.get('overview')),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -33,7 +34,7 @@ class StatisticsScreen extends StatelessWidget {
                           child: _buildStatCard(
                             icon: Icons.emoji_events_rounded,
                             value: '${db.totalPuzzlesSolved}',
-                            label: 'Puzzles Solved',
+                            label: AppStrings.get('puzzles_solved'),
                             color: AppTheme.primaryColor,
                           ),
                         ),
@@ -42,7 +43,7 @@ class StatisticsScreen extends StatelessWidget {
                           child: _buildStatCard(
                             icon: Icons.star_rounded,
                             value: '${db.getTotalStars()}',
-                            label: 'Stars Earned',
+                            label: AppStrings.get('stars_earned'),
                             color: const Color(0xFFFFD700),
                           ),
                         ),
@@ -55,7 +56,7 @@ class StatisticsScreen extends StatelessWidget {
                           child: _buildStatCard(
                             icon: Icons.timer_rounded,
                             value: _formatTimeLong(db.totalTimePlayed),
-                            label: 'Total Time',
+                            label: AppStrings.get('total_time'),
                             color: AppTheme.secondaryColor,
                           ),
                         ),
@@ -64,7 +65,7 @@ class StatisticsScreen extends StatelessWidget {
                           child: _buildStatCard(
                             icon: Icons.speed_rounded,
                             value: _formatTime(db.bestTime),
-                            label: 'Best Time',
+                            label: AppStrings.get('best_time'),
                             color: AppTheme.successColor,
                           ),
                         ),
@@ -74,21 +75,21 @@ class StatisticsScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Campaign Progress
-                    _buildSectionTitle('Campaign Progress'),
+                    _buildSectionTitle(AppStrings.get('campaign_progress')),
                     const SizedBox(height: 10),
                     _buildProgressCard(db),
 
                     const SizedBox(height: 24),
 
                     // Quick Play
-                    _buildSectionTitle('Quick Play'),
+                    _buildSectionTitle(AppStrings.get('quick_play')),
                     const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
                           child: _buildDiffStatCard(
                             emoji: '🟢',
-                            label: 'Easy',
+                            label: AppStrings.get('easy'),
                             value: db.getStat('quick_play_easy_solved'),
                             color: AppTheme.easyColor,
                           ),
@@ -97,7 +98,7 @@ class StatisticsScreen extends StatelessWidget {
                         Expanded(
                           child: _buildDiffStatCard(
                             emoji: '🟡',
-                            label: 'Medium',
+                            label: AppStrings.get('medium'),
                             value: db.getStat('quick_play_medium_solved'),
                             color: AppTheme.mediumColor,
                           ),
@@ -106,7 +107,7 @@ class StatisticsScreen extends StatelessWidget {
                         Expanded(
                           child: _buildDiffStatCard(
                             emoji: '🔴',
-                            label: 'Hard',
+                            label: AppStrings.get('hard'),
                             value: db.getStat('quick_play_hard_solved'),
                             color: AppTheme.hardColor,
                           ),
@@ -117,12 +118,12 @@ class StatisticsScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Hints
-                    _buildSectionTitle('Hints'),
+                    _buildSectionTitle(AppStrings.get('hints')),
                     const SizedBox(height: 10),
                     _buildStatCard(
                       icon: Icons.lightbulb_outline_rounded,
                       value: '${db.totalHintsUsed}',
-                      label: 'Total Hints Used',
+                      label: AppStrings.get('total_hints_used'),
                       color: AppTheme.warningColor,
                       wide: true,
                     ),
@@ -130,7 +131,7 @@ class StatisticsScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Time Attack
-                    _buildSectionTitle('Time Attack'),
+                    _buildSectionTitle(AppStrings.get('time_attack')),
                     const SizedBox(height: 10),
                     if (db.timeAttackTotalGames > 0) ...[
                       Row(
@@ -139,7 +140,7 @@ class StatisticsScreen extends StatelessWidget {
                             child: _buildStatCard(
                               icon: Icons.bolt_rounded,
                               value: '${db.timeAttackBest}',
-                              label: 'Best Score',
+                              label: AppStrings.get('best_score'),
                               color: Colors.orange,
                             ),
                           ),
@@ -148,7 +149,7 @@ class StatisticsScreen extends StatelessWidget {
                             child: _buildStatCard(
                               icon: Icons.sports_esports_rounded,
                               value: '${db.timeAttackTotalGames}',
-                              label: 'Games Played',
+                              label: AppStrings.get('games_played'),
                               color: AppTheme.secondaryColor,
                             ),
                           ),
@@ -161,7 +162,7 @@ class StatisticsScreen extends StatelessWidget {
                             child: _buildStatCard(
                               icon: Icons.check_circle_outline_rounded,
                               value: '${db.timeAttackTotalSolved}',
-                              label: 'Total Solved',
+                              label: AppStrings.get('total_solved'),
                               color: AppTheme.successColor,
                             ),
                           ),
@@ -172,7 +173,7 @@ class StatisticsScreen extends StatelessWidget {
                               value: db.timeAttackTotalGames > 0
                                   ? (db.timeAttackTotalSolved / db.timeAttackTotalGames).toStringAsFixed(1)
                                   : '0',
-                              label: 'Avg per Game',
+                              label: AppStrings.get('avg_per_game'),
                               color: AppTheme.primaryColor,
                             ),
                           ),
@@ -188,7 +189,7 @@ class StatisticsScreen extends StatelessWidget {
                             const Text('⚡', style: TextStyle(fontSize: 28)),
                             const SizedBox(height: 8),
                             Text(
-                              'Play Time Attack to see your stats here!',
+                              AppStrings.get('time_attack_empty'),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: AppTheme.textMuted.withValues(alpha: 0.6),
@@ -234,8 +235,8 @@ class StatisticsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: AppTheme.glassDecoration(borderRadius: 12),
-            child: const Text(
-              'STATISTICS',
+            child: Text(
+              AppStrings.get('statistics').toUpperCase(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

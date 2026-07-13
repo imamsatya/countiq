@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/achievement_service.dart';
+import '../../core/l10n/app_strings.dart';
 
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
@@ -74,8 +75,8 @@ class AchievementsScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Text(
-                'Achievements',
+              Text(
+                AppStrings.get('achievements'),
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -123,13 +124,13 @@ class AchievementsScreen extends StatelessWidget {
 
   Widget _buildCategoryHeader(AchievementCategory category) {
     final labels = {
-      AchievementCategory.beginner: ('🌱', 'Beginner'),
-      AchievementCategory.campaign: ('📖', 'Campaign'),
-      AchievementCategory.quickPlay: ('🎮', 'Quick Play'),
-      AchievementCategory.daily: ('📅', 'Daily'),
-      AchievementCategory.mastery: ('👑', 'Mastery'),
+      AchievementCategory.beginner: ('🌱', AppStrings.get('beginner')),
+      AchievementCategory.campaign: ('📖', AppStrings.get('campaign')),
+      AchievementCategory.quickPlay: ('🎮', AppStrings.get('quick_play')),
+      AchievementCategory.daily: ('📅', AppStrings.get('daily_challenge')),
+      AchievementCategory.mastery: ('👑', AppStrings.get('mastery')),
     };
-    final (icon, label) = labels[category] ?? ('🏆', 'Other');
+    final (icon, label) = labels[category] ?? ('🏆', AppStrings.get('other'));
 
     return Padding(
       padding: const EdgeInsets.only(left: 4, top: 8),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
-
+import '../../core/l10n/tutorial_strings.dart';
 class HowToPlayScreen extends StatefulWidget {
   const HowToPlayScreen({super.key});
 
@@ -101,12 +101,14 @@ class _HowToPlayScreenState extends State<HowToPlayScreen> {
                       ),
                     ),
                     const Spacer(),
-                    const Text(
-                      'How to Play',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
+                    Text(
+                      TutorialStrings.get('how_to_play'),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        letterSpacing: 1,
+                      ),
                     ),
                     const Spacer(),
                     const SizedBox(width: 38),
