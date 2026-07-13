@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/tutorial_strings.dart';
+import '../../core/l10n/app_strings.dart';
 class HowToPlayScreen extends StatefulWidget {
   const HowToPlayScreen({super.key});
 
@@ -13,58 +14,36 @@ class _HowToPlayScreenState extends State<HowToPlayScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static const _pages = [
+  List<_TutorialPage> get _pages => [
     _TutorialPage(
       icon: '🎯',
-      title: 'Reach the Target',
-      description:
-          'You are given a TARGET number and a set of available numbers. '
-          'Your goal is to combine the available numbers using math operations '
-          'to reach the exact target.',
-      example: 'Target: 120\nNumbers: 75, 5, 8, 7, 6, 2',
+      title: TutorialStrings.get('reach_the_target'),
+      description: TutorialStrings.get('reach_target_desc'),
+      example: TutorialStrings.get('reach_target_example'),
     ),
     _TutorialPage(
       icon: '🔢',
-      title: 'How to Play',
-      description:
-          '1. Tap a number to select it\n'
-          '2. Tap an operator (+, −, ×, ÷)\n'
-          '3. Tap a second number\n'
-          '4. The result replaces both numbers\n'
-          '5. Repeat until you reach the target!',
-      example: '75 ÷ 5 = 15\n15 × 8 = 120 ✓',
+      title: TutorialStrings.get('how_to_play'),
+      description: TutorialStrings.get('how_to_play_desc'),
+      example: TutorialStrings.get('how_to_play_example'),
     ),
     _TutorialPage(
       icon: '⚠️',
-      title: 'Rules',
-      description:
-          '• Each number can only be used ONCE\n'
-          '• You don\'t have to use all numbers\n'
-          '• Only +, −, ×, ÷ are allowed\n'
-          '• No fractions (5÷2 = ✗)\n'
-          '• No negatives (3−8 = ✗)\n'
-          '• Results must be positive integers',
-      example: '5 ÷ 2 = 2.5 ✗\n3 − 8 = −5 ✗',
+      title: TutorialStrings.get('rules'),
+      description: TutorialStrings.get('rules_desc'),
+      example: TutorialStrings.get('rules_example'),
     ),
     _TutorialPage(
       icon: '⭐',
-      title: 'Star Rating',
-      description:
-          'Your performance is rated with stars:\n\n'
-          '⭐⭐⭐ Solve quickly, no hints\n'
-          '⭐⭐ Solve with few hints or moderate time\n'
-          '⭐ Solve the puzzle (any method)',
-      example: 'Faster solve + fewer hints = more stars!',
+      title: TutorialStrings.get('star_rating'),
+      description: TutorialStrings.get('star_rating_desc'),
+      example: TutorialStrings.get('star_rating_example'),
     ),
     _TutorialPage(
       icon: '💡',
-      title: 'Tips & Hints',
-      description:
-          '• Use the HINT button if you\'re stuck — it shows one step from the solution\n'
-          '• Use UNDO to go back one step\n'
-          '• Use RESET to start over\n'
-          '• Look for multiplication & division first — they make bigger jumps!',
-      example: 'Tip: 75 ÷ 5 = 15, then 15 × 8 = 120 🎉',
+      title: AppStrings.get('tips_hints'),
+      description: TutorialStrings.get('tips_hints_desc'),
+      example: TutorialStrings.get('tips_hints_example'),
     ),
   ];
 
@@ -267,7 +246,7 @@ class _HowToPlayScreenState extends State<HowToPlayScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    isLast ? 'Got It!' : 'Next',
+                    isLast ? AppStrings.get('got_it') : AppStrings.get('next'),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
