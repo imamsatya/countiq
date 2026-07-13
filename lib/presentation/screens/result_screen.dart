@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/achievement_service.dart';
+import '../../core/engine/campaign_generator.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../widgets/achievement_toast.dart';
 import '../../core/l10n/app_strings.dart';
@@ -18,6 +19,7 @@ class ResultScreen extends ConsumerStatefulWidget {
   final int stars;
   final String difficulty;
   final int target;
+  final int? campaignLevel;
   final List<CalcStep> solutionSteps;
 
   const ResultScreen({
@@ -28,6 +30,7 @@ class ResultScreen extends ConsumerStatefulWidget {
     required this.stars,
     required this.difficulty,
     required this.target,
+    this.campaignLevel,
     this.solutionSteps = const [],
   });
 
@@ -374,10 +377,20 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
   }
 
   Widget _buildNextButton(BuildContext context) {
+    final isCampaign = widget.campaignLevel != null;
     return GestureDetector(
       onTap: () {
-        // Play another puzzle at the same difficulty
-        context.go('/game/${widget.difficulty}');
+        if (isCampaign) {
+          final nextLevel = widget.campaignLevel! + 1;
+          if (nextLevel <= CampaignGenerator.totalLevels) {
+            context.go('/campaign/$nextLevel');
+          } else {
+            context.go('/levels');
+          }
+        } else {
+          // Quick Play: generate a new puzzle at the same difficulty
+          context.go('/game/${widget.difficulty}');
+        }
       },
       child: Container(
         width: double.infinity,
@@ -389,7 +402,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
             const Icon(Icons.play_arrow_rounded, color: Color(0xFF0A0E1A), size: 26),
             const SizedBox(width: 8),
             Text(
-              AppStrings.get('next_puzzle').toUpperCase(),
+              isCampaign
+                  ? '${AppStrings.get('next_puzzle').toUpperCase()} →'
+                  : AppStrings.get('next_puzzle').toUpperCase(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

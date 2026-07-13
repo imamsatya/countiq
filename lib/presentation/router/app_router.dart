@@ -91,6 +91,7 @@ final appRouter = GoRouter(
             stars: extras['stars'] ?? 1,
             difficulty: extras['difficulty'] ?? 'easy',
             target: extras['target'] ?? 0,
+            campaignLevel: extras['levelNumber'],
             solutionSteps: extras['solutionSteps'] ?? const [],
           ),
           state: state,
