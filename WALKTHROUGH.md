@@ -165,7 +165,13 @@ countiq/
 
 ---
 
-## Phase 5 — Onboarding ✅
+## Phase 5 — Onboarding & Localization ✅
+
+### Full Localization (11 Languages)
+- **11 Bahasa**: English, Español, Português, Deutsch, Français, 日本語, 한국어, Bahasa Indonesia, 简体中文, हिन्दी, العربية.
+- **System Default**: Opsi deteksi bahasa sesuai pengaturan sistem device.
+- **Language Selector**: Tampilan list picker premium dengan bendera (seperti di CryptiQ).
+- **Semua Teks Diterjemahkan**: Mulai dari menu, tutorial, game screen, result, time attack, hingga statistik (total 70+ string).
 
 ### First-Time User Tutorial Overlay
 - **Trigger**: Otomatis muncul saat pertama kali buka app (`isFirstLaunch` flag di Hive)

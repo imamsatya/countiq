@@ -177,7 +177,7 @@ class LocalDatabase {
 
   // ─── Locale ─────────────────────────────────────────────────
 
-  String getLocale() => _settingsBox.get('locale', defaultValue: 'en');
+  String getLocale() => _settingsBox.get('locale', defaultValue: 'system');
 
   Future<void> setLocale(String locale) => _settingsBox.put('locale', locale);
 

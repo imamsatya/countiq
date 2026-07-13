@@ -242,3 +242,32 @@ Untuk membedakan dari CryptiQ (Navy Gold), CountiQ akan menggunakan:
 - ✅ Overlay muncul saat pertama kali buka app
 - ✅ Setelah complete, tidak muncul lagi
 - ✅ Reset di Settings → onboarding muncul lagi
+
+---
+
+## Fase 5 (Lanjutan) — Full Localization (11 Languages)
+
+### Keputusan Desain
+Menambahkan opsi bahasa selengkap CryptiQ agar game bisa menjangkau audiens global.
+
+### Pendekatan yang Dipilih
+1. **11 Bahasa**: English, Español, Português, Deutsch, Français, 日本語, 한국어, Bahasa Indonesia, 简体中文, हिन्दी, العربية.
+2. **System Default**: Opsi deteksi bahasa sesuai pengaturan sistem device (`PlatformDispatcher.instance.locale.languageCode`).
+3. **Language Selector**: Tampilan list picker premium dengan bendera, diakses dari menu Settings.
+
+### Proposed Changes — Full Localization
+
+#### [MODIFY] [local_database.dart](file:///Users/sbr-02/Belajar/countiq/lib/data/datasources/local_database.dart)
+- Mengubah `defaultValue` locale menjadi `'system'`.
+
+#### [MODIFY] [app_strings.dart](file:///Users/sbr-02/Belajar/countiq/lib/core/l10n/app_strings.dart)
+- Menambahkan logika deteksi bahasa OS.
+- Mengubah `_strings` map untuk memuat terjemahan dari 11 bahasa untuk seluruh 70+ string.
+
+#### [MODIFY] [settings_screen.dart](file:///Users/sbr-02/Belajar/countiq/lib/presentation/screens/settings_screen.dart)
+- Membuat class `AppLanguage` dan konstanta `supportedLanguages`.
+- Mengubah UI Language Selector dari single row toggle menjadi full `Column` list dengan flag icon.
+
+### Verification — Full Localization
+- ✅ `flutter analyze` → 0 issues
+- ✅ Bahasa berhasil terganti secara real-time dari menu settings

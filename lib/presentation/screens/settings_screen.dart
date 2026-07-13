@@ -64,6 +64,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         LocalDatabase.instance.setHapticEnabled(val);
                       },
                     ),
+                    // No language selector here anymore
+
+                    const SizedBox(height: 24),
+
+                    // Language section
+                    _buildSectionTitle(AppStrings.get('language')),
                     const SizedBox(height: 8),
                     _buildLanguageSelector(),
 
@@ -322,59 +328,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildLanguageSelector() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: AppTheme.glassDecoration(borderRadius: 14),
-      child: Row(
-        children: [
-          Icon(Icons.language_rounded, color: AppTheme.primaryColor, size: 22),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              AppStrings.get('language'),
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          GestureDetector(
+      child: Column(
+        children: supportedLanguages.map((lang) {
+          final isActive = _locale == lang.code;
+          return InkWell(
             onTap: () {
-              final newLocale = _locale == 'en' ? 'id' : 'en';
-              setState(() => _locale = newLocale);
-              LocalDatabase.instance.setLocale(newLocale);
+              setState(() => _locale = lang.code);
+              LocalDatabase.instance.setLocale(lang.code);
             },
+            borderRadius: BorderRadius.circular(14),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppTheme.primaryColor.withValues(alpha: 0.15),
-                border: Border.all(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                ),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: isActive
+                  ? BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(14),
+                    )
+                  : null,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    _locale == 'en' ? '🇬🇧 EN' : '🇮🇩 ID',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.primaryColor,
+                  Text(lang.flag, style: const TextStyle(fontSize: 22)),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      lang.name,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                        color: isActive ? AppTheme.primaryColor : Colors.white,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.swap_horiz_rounded,
-                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
-                    size: 16,
-                  ),
+                  if (isActive)
+                    const Icon(Icons.check_rounded,
+                        color: AppTheme.primaryColor, size: 20),
                 ],
               ),
             ),
-          ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }
@@ -409,3 +402,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
+
+class AppLanguage {
+  final String code;
+  final String name;
+  final String flag;
+
+  const AppLanguage(this.code, this.name, this.flag);
+}
+
+const supportedLanguages = [
+  AppLanguage('system', 'System Default', '📱'),
+  AppLanguage('en', 'English', '🇺🇸'),
+  AppLanguage('es', 'Español', '🇪🇸'),
+  AppLanguage('pt', 'Português', '🇧🇷'),
+  AppLanguage('de', 'Deutsch', '🇩🇪'),
+  AppLanguage('fr', 'Français', '🇫🇷'),
+  AppLanguage('ja', '日本語', '🇯🇵'),
+  AppLanguage('ko', '한국어', '🇰🇷'),
+  AppLanguage('id', 'Bahasa Indonesia', '🇮🇩'),
+  AppLanguage('zh', '简体中文', '🇨🇳'),
+  AppLanguage('hi', 'हिन्दी', '🇮🇳'),
+  AppLanguage('ar', 'العربية', '🇸🇦'),
+];
