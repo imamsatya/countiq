@@ -118,8 +118,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
     }
 
     _undoStack.add(_UndoSnap(
-      boardNumbers: List.from(_boardNumbers),
-      steps: List.from(_steps),
+      boardNumbers: _boardNumbers.toList(),
+      steps: _steps.toList(),
     ));
 
     final step = CalcStep(

@@ -701,7 +701,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     'stars': gameState.calculateStars(),
                     'difficulty': widget.difficulty,
                     'target': gameState.puzzle.target,
-                    'solutionSteps': List.from(gameState.steps),
+                    'solutionSteps': gameState.steps.toList(),
                   });
                 } else {
                   // Skip to new puzzle

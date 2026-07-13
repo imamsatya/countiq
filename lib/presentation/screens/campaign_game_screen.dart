@@ -120,8 +120,8 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
     }
 
     _undoStack.add(_UndoSnapshot(
-      boardNumbers: List.from(_boardNumbers),
-      steps: List.from(_steps),
+      boardNumbers: _boardNumbers.toList(),
+      steps: _steps.toList(),
     ));
 
     final step = CalcStep(num1: a, operator: _selectedOperator!, num2: b, result: result);
@@ -562,7 +562,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
                     'hints': _hintsUsed, 'stars': _calculateStars(),
                     'difficulty': _puzzle.difficulty, 'target': _puzzle.target,
                     'levelNumber': widget.levelNumber,
-                    'solutionSteps': List.from(_steps),
+                    'solutionSteps': _steps.toList(),
                   });
                 }
               },
