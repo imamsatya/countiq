@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 
@@ -15,8 +16,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late bool _soundEnabled;
   late bool _hapticEnabled;
   late String _locale;
-  int _devTapCount = 0;
-  bool _devModeUnlocked = false;
 
   @override
   void initState() {
@@ -74,7 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildSectionTitle(AppStrings.get('about')),
                     const SizedBox(height: 8),
                     _buildVersionItem(),
-                    if (_devModeUnlocked) ...[
+                    if (AppConstants.devMode) ...[
                       const SizedBox(height: 8),
                       _buildTapItem(
                         icon: Icons.developer_mode_rounded,
@@ -381,48 +380,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildVersionItem() {
-    return GestureDetector(
-      onTap: () {
-        _devTapCount++;
-        if (_devTapCount >= 5 && !_devModeUnlocked) {
-          setState(() => _devModeUnlocked = true);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('🔧 Dev Mode unlocked!',
-                  style: TextStyle(fontFamily: 'Poppins')),
-              backgroundColor: Colors.orange,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          );
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: AppTheme.glassDecoration(borderRadius: 14),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline_rounded, color: AppTheme.primaryColor, size: 22),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                AppStrings.get('version'),
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: AppTheme.glassDecoration(borderRadius: 14),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline_rounded, color: AppTheme.primaryColor, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppStrings.get('version'),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
-            Text(
-              '1.0.0',
-              style: TextStyle(
-                fontSize: 13,
-                color: AppTheme.textSecondary.withValues(alpha: 0.7),
-              ),
+          ),
+          Text(
+            AppConstants.appVersion,
+            style: TextStyle(
+              fontSize: 13,
+              color: AppTheme.textSecondary.withValues(alpha: 0.7),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -46,6 +46,7 @@ countiq/
 │       │   └── statistics_screen.dart                # Stats + Time Attack stats
 │       └── widgets/
 │           ├── particle_background.dart              # Math symbol particles + rotation
+│           ├── onboarding_overlay.dart                # First-time 4-slide tutorial overlay
 │           └── achievement_toast.dart                 # Unlock notification overlay
 ├── fonts/                                            # Poppins font family
 ├── assets/audio/                                     # pop.mp3, success.mp3, error.mp3
@@ -164,6 +165,41 @@ countiq/
 
 ---
 
+## Phase 5 — Onboarding ✅
+
+### First-Time User Tutorial Overlay
+- **Trigger**: Otomatis muncul saat pertama kali buka app (`isFirstLaunch` flag di Hive)
+- **Persistence**: Flag `onboarding_done` disimpan di Hive, overlay hanya muncul sekali
+- **Reset**: Jika user reset progress di Settings, onboarding muncul lagi
+
+### 4-Slide Premium Overlay
+
+| Slide | Isi | Visual |
+|-------|-----|--------|
+| 1. Welcome | Logo CountiQ + "Welcome to CountiQ!" | Logo bounce anim, gradient title, math symbols row |
+| 2. How It Works | TARGET mockup (120) + 4 step rows | Mini game board, numbered steps with badges |
+| 3. Rules | 3 aturan permainan | Color-coded rule cards with icons & examples |
+| 4. Ready | Feature preview + CTA | Celebration emoji, feature icons, "LET'S GO!" glow button |
+
+### Fitur Overlay
+- Entry fade + scale animation (800ms)
+- Exit fade animation (500ms)
+- Per-page content fade + slide animation
+- Animated dot indicators with gradient
+- Skip button di setiap halaman (kecuali halaman terakhir)
+- PageView dengan smooth navigation
+- Full EN/ID localization (14 key baru)
+
+### Files Changed
+| File | Aksi |
+|------|------|
+| `onboarding_overlay.dart` | **NEW** — 4-slide full-screen overlay widget |
+| `local_database.dart` | MODIFY — `isFirstLaunch` + `markOnboardingDone()` |
+| `app_strings.dart` | MODIFY — 14 onboarding strings EN/ID |
+| `home_screen.dart` | MODIFY — Stack wrapper + overlay trigger |
+
+---
+
 ## Routes
 | Path | Screen |
 |------|--------|
@@ -182,8 +218,8 @@ countiq/
 ---
 
 ## Verification
-- ✅ `flutter analyze` — **0 new issues**
-- ✅ All phases (1-4) complete
+- ✅ `flutter analyze` — **0 issues**
+- ✅ All phases (1-5) complete
 
 ---
 

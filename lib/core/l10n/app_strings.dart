@@ -127,6 +127,29 @@ class AppStrings {
     'share_text_header': {'en': 'CountiQ — Target:', 'id': 'CountiQ — Target:'},
     'share_no_hints': {'en': 'No hints!', 'id': 'Tanpa petunjuk!'},
     'share_cta': {'en': 'Can you solve it? #CountiQ #MathPuzzle', 'id': 'Bisakah kamu memecahkannya? #CountiQ #MathPuzzle'},
+
+    // ─── Onboarding ──────────────────────────────────────────
+    'onboarding_welcome': {'en': 'Welcome to CountiQ!', 'id': 'Selamat Datang di CountiQ!'},
+    'onboarding_subtitle': {
+      'en': 'A number puzzle game where you\nreach the target number',
+      'id': 'Game teka-teki angka di mana kamu\nharus meraih angka target',
+    },
+    'onboarding_how_title': {'en': 'How It Works', 'id': 'Cara Bermain'},
+    'onboarding_how_step1': {'en': 'Tap a number', 'id': 'Ketuk angka'},
+    'onboarding_how_step2': {'en': 'Pick an operator', 'id': 'Pilih operator'},
+    'onboarding_how_step3': {'en': 'Tap second number', 'id': 'Ketuk angka kedua'},
+    'onboarding_how_step4': {'en': 'Get the result!', 'id': 'Dapat hasilnya!'},
+    'onboarding_rules_title': {'en': 'The Rules', 'id': 'Aturan Permainan'},
+    'onboarding_rule1': {'en': 'Each number used ONCE', 'id': 'Setiap angka dipakai SEKALI'},
+    'onboarding_rule2': {'en': 'Whole positive numbers only', 'id': 'Hanya bilangan bulat positif'},
+    'onboarding_rule3': {'en': 'Only +, −, ×, ÷ allowed', 'id': 'Hanya +, −, ×, ÷ yang boleh'},
+    'onboarding_ready': {'en': "You're Ready!", 'id': 'Kamu Siap!'},
+    'onboarding_ready_desc': {
+      'en': 'Solve puzzles, earn stars,\nand challenge yourself daily!',
+      'id': 'Pecahkan teka-teki, kumpulkan bintang,\ndan tantang dirimu setiap hari!',
+    },
+    'onboarding_letsgo': {'en': "LET'S GO!", 'id': 'AYO MAIN!'},
+    'onboarding_skip': {'en': 'Skip', 'id': 'Lewati'},
   };
 
   /// Get a localized string by key. Falls back to English.

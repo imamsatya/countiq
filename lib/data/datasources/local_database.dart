@@ -181,6 +181,16 @@ class LocalDatabase {
 
   Future<void> setLocale(String locale) => _settingsBox.put('locale', locale);
 
+  // ─── Onboarding ─────────────────────────────────────────────
+
+  /// Returns true if the user has never completed onboarding
+  bool get isFirstLaunch =>
+      !_settingsBox.get('onboarding_done', defaultValue: false);
+
+  /// Mark onboarding as completed so it won't show again
+  Future<void> markOnboardingDone() =>
+      _settingsBox.put('onboarding_done', true);
+
   // ─── Reset ──────────────────────────────────────────────────
 
   /// Reset ALL progress: settings, stats, levels, daily data.

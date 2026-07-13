@@ -6,6 +6,7 @@ import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../widgets/particle_background.dart';
+import '../widgets/onboarding_overlay.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
+  bool _showOnboarding = false;
+
   late AnimationController _entryController;
   late AnimationController _dailyPulseController;
 
@@ -94,6 +97,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _dailyPulseController.repeat(reverse: true);
     }
 
+    // Check first launch for onboarding
+    _showOnboarding = LocalDatabase.instance.isFirstLaunch;
+
     _entryController.forward();
   }
 
@@ -112,208 +118,221 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final totalSolved = db.totalPuzzlesSolved;
 
     return Scaffold(
-      body: ParticleBackground(
-        child: Container(
-          decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const SizedBox(height: 12),
-                  const Spacer(flex: 2),
+      body: Stack(
+        children: [
+          // Main home content
+          ParticleBackground(
+            child: Container(
+              decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      const Spacer(flex: 2),
 
-                  // Logo (bounce in)
-                  ScaleTransition(
-                    scale: _logoScale,
-                    child: _buildLogo(),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Title (fade + slide)
-                  FadeTransition(
-                    opacity: _titleFade,
-                    child: SlideTransition(
-                      position: _titleSlide,
-                      child: Column(
-                        children: [
-                          ShaderMask(
-                            shaderCallback: (bounds) =>
-                                AppTheme.primaryGradient.createShader(bounds),
-                            child: const Text(
-                              'CountiQ',
-                              style: TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                letterSpacing: 4,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppStrings.appSubtitle,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.textSecondary.withValues(alpha: 0.7),
-                              letterSpacing: 3,
-                            ),
-                          ),
-                        ],
+                      // Logo (bounce in)
+                      ScaleTransition(
+                        scale: _logoScale,
+                        child: _buildLogo(),
                       ),
-                    ),
-                  ),
+                      const SizedBox(height: 12),
 
-                  const SizedBox(height: 24),
+                      // Title (fade + slide)
+                      FadeTransition(
+                        opacity: _titleFade,
+                        child: SlideTransition(
+                          position: _titleSlide,
+                          child: Column(
+                            children: [
+                              ShaderMask(
+                                shaderCallback: (bounds) =>
+                                    AppTheme.primaryGradient.createShader(bounds),
+                                child: const Text(
+                                  'CountiQ',
+                                  style: TextStyle(
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    letterSpacing: 4,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                AppStrings.appSubtitle,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                                  letterSpacing: 3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
-                  // Mini stats row
-                  FadeTransition(
-                    opacity: _titleFade,
-                    child: totalSolved > 0
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildMiniStat(Icons.emoji_events_rounded,
-                                    '$totalSolved', AppTheme.primaryColor),
-                                const SizedBox(width: 20),
-                                _buildMiniStat(Icons.star_rounded,
-                                    '$totalStars', const Color(0xFFFFD700)),
-                                if (highestLevel > 0) ...[
-                                  const SizedBox(width: 20),
-                                  _buildMiniStat(Icons.flag_rounded,
-                                      'Lv.$highestLevel', AppTheme.successColor),
+                      const SizedBox(height: 24),
+
+                      // Mini stats row
+                      FadeTransition(
+                        opacity: _titleFade,
+                        child: totalSolved > 0
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _buildMiniStat(Icons.emoji_events_rounded,
+                                        '$totalSolved', AppTheme.primaryColor),
+                                    const SizedBox(width: 20),
+                                    _buildMiniStat(Icons.star_rounded,
+                                        '$totalStars', const Color(0xFFFFD700)),
+                                    if (highestLevel > 0) ...[
+                                      const SizedBox(width: 20),
+                                      _buildMiniStat(Icons.flag_rounded,
+                                          'Lv.$highestLevel', AppTheme.successColor),
+                                    ],
+                                  ],
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+
+                      // Buttons section (fade + slide)
+                      FadeTransition(
+                        opacity: _buttonsFade,
+                        child: SlideTransition(
+                          position: _buttonsSlide,
+                          child: Column(
+                            children: [
+                              // Daily Challenge card
+                              _buildDailyCard(context),
+                              const SizedBox(height: 12),
+
+                              // Campaign button
+                              _buildCampaignButton(context, highestLevel),
+                              const SizedBox(height: 10),
+
+                              // Quick Play difficulty selectors
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildDifficultyButton(
+                                      context,
+                                      label: '🟢 ${AppStrings.get('easy')}',
+                                      difficulty: 'easy',
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _buildDifficultyButton(
+                                      context,
+                                      label: '🟡 ${AppStrings.get('medium')}',
+                                      difficulty: 'medium',
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _buildDifficultyButton(
+                                      context,
+                                      label: '🔴 ${AppStrings.get('hard')}',
+                                      difficulty: 'hard',
+                                    ),
+                                  ),
                                 ],
-                              ],
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              // Time Attack + Level Select row
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTimeAttackButton(context),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _buildMenuButton(
+                                      context,
+                                      icon: Icons.grid_view_rounded,
+                                      label: AppStrings.get('select_level'),
+                                      onTap: () => context.push('/levels'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Bottom icon row (fade in last)
+                      FadeTransition(
+                        opacity: _bottomFade,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildIconButton(
+                              icon: Icons.bar_chart_rounded,
+                              tooltip: 'Statistics',
+                              onTap: () => context.push('/statistics'),
                             ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-
-                  // Buttons section (fade + slide)
-                  FadeTransition(
-                    opacity: _buttonsFade,
-                    child: SlideTransition(
-                      position: _buttonsSlide,
-                      child: Column(
-                        children: [
-                          // Daily Challenge card
-                          _buildDailyCard(context),
-                          const SizedBox(height: 12),
-
-                          // Campaign button
-                          _buildCampaignButton(context, highestLevel),
-                          const SizedBox(height: 10),
-
-                          // Quick Play difficulty selectors
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  context,
-                                  label: '🟢 ${AppStrings.get('easy')}',
-                                  difficulty: 'easy',
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  context,
-                                  label: '🟡 ${AppStrings.get('medium')}',
-                                  difficulty: 'medium',
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  context,
-                                  label: '🔴 ${AppStrings.get('hard')}',
-                                  difficulty: 'hard',
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          // Time Attack + Level Select row
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildTimeAttackButton(context),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: _buildMenuButton(
-                                  context,
-                                  icon: Icons.grid_view_rounded,
-                                  label: AppStrings.get('select_level'),
-                                  onTap: () => context.push('/levels'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                            const SizedBox(width: 16),
+                            _buildIconButton(
+                              icon: Icons.emoji_events_rounded,
+                              tooltip: 'Achievements',
+                              onTap: () => context.push('/achievements'),
+                            ),
+                            const SizedBox(width: 16),
+                            _buildIconButton(
+                              icon: Icons.help_outline_rounded,
+                              tooltip: 'How to Play',
+                              onTap: () => context.push('/how-to-play'),
+                            ),
+                            const SizedBox(width: 16),
+                            _buildIconButton(
+                              icon: Icons.settings_rounded,
+                              tooltip: 'Settings',
+                              onTap: () => context.push('/settings'),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 16),
+                      const Spacer(flex: 3),
 
-                  // Bottom icon row (fade in last)
-                  FadeTransition(
-                    opacity: _bottomFade,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildIconButton(
-                          icon: Icons.bar_chart_rounded,
-                          tooltip: 'Statistics',
-                          onTap: () => context.push('/statistics'),
+                      // Footer
+                      FadeTransition(
+                        opacity: _bottomFade,
+                        child: Text(
+                          AppStrings.get('app_footer'),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppTheme.textMuted.withValues(alpha: 0.6),
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(width: 16),
-                        _buildIconButton(
-                          icon: Icons.emoji_events_rounded,
-                          tooltip: 'Achievements',
-                          onTap: () => context.push('/achievements'),
-                        ),
-                        const SizedBox(width: 16),
-                        _buildIconButton(
-                          icon: Icons.help_outline_rounded,
-                          tooltip: 'How to Play',
-                          onTap: () => context.push('/how-to-play'),
-                        ),
-                        const SizedBox(width: 16),
-                        _buildIconButton(
-                          icon: Icons.settings_rounded,
-                          tooltip: 'Settings',
-                          onTap: () => context.push('/settings'),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const Spacer(flex: 3),
-
-                  // Footer
-                  FadeTransition(
-                    opacity: _bottomFade,
-                    child: Text(
-                      AppStrings.get('app_footer'),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: AppTheme.textMuted.withValues(alpha: 0.6),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+
+          // Onboarding overlay (shows only on first launch)
+          if (_showOnboarding)
+            OnboardingOverlay(
+              onComplete: () {
+                setState(() => _showOnboarding = false);
+              },
+            ),
+        ],
       ),
     );
   }

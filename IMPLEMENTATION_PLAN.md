@@ -192,3 +192,53 @@ Untuk membedakan dari CryptiQ (Navy Gold), CountiQ akan menggunakan:
 
 > [!NOTE]
 > Fase 1 ini fokus pada **fondasi yang solid**: engine yang benar + 3 screen inti (Home, Game, Result). Fitur tambahan (Daily Challenge, Level Select, Settings, dll) akan ditambahkan bertahap di fase berikutnya.
+
+---
+
+## Fase 5 (Selesai) — Onboarding
+
+### Keputusan Desain
+
+**Pilihan yang diajukan:**
+1. ~~Phase 5: Full Localization — Terapkan localization ke semua screen~~
+2. ~~Phase 5: Ads Integration (AdMob)~~
+3. ~~Phase 5: UI/UX Improvement~~
+4. **✅ Phase 5: Onboarding — First-time user tutorial overlay** ← Dipilih
+5. ~~Phase 5: Complete Localization + Production Ready~~
+
+**Alasan**: Onboarding penting untuk user retention. User baru perlu dipandu cara bermain agar tidak bingung dan langsung engage.
+
+### Pendekatan yang Dipilih
+
+**Full-screen overlay** (bukan redirect ke `/how-to-play`):
+- Lebih premium dan immersive
+- Muncul otomatis HANYA pertama kali (state disimpan di Hive)
+- Background semi-transparent glassmorphism di atas home screen
+- 4 halaman swipeable dengan animasi smooth
+- Tombol "Skip" di setiap halaman (kecuali terakhir)
+
+### Proposed Changes — Fase 5
+
+#### [MODIFY] [local_database.dart](file:///Users/sbr-02/Belajar/countiq/lib/data/datasources/local_database.dart)
+- `isFirstLaunch` getter → cek `_settingsBox.get('onboarding_done')`
+- `markOnboardingDone()` → set flag ke `true`
+
+#### [NEW] [onboarding_overlay.dart](file:///Users/sbr-02/Belajar/countiq/lib/presentation/widgets/onboarding_overlay.dart)
+4-slide overlay widget:
+- Slide 1: Welcome — Logo bounce, gradient title, math symbols
+- Slide 2: How It Works — TARGET mockup (120), 4 step rows
+- Slide 3: Rules — 3 color-coded rule cards
+- Slide 4: Ready — Feature icons + "LET'S GO!" CTA
+
+#### [MODIFY] [home_screen.dart](file:///Users/sbr-02/Belajar/countiq/lib/presentation/screens/home_screen.dart)
+- Stack wrapper, cek `isFirstLaunch` di `initState()`
+- Tampilkan `OnboardingOverlay` sebagai full-screen overlay
+
+#### [MODIFY] [app_strings.dart](file:///Users/sbr-02/Belajar/countiq/lib/core/l10n/app_strings.dart)
+- 14 key baru untuk onboarding (EN/ID)
+
+### Verification — Fase 5
+- ✅ `flutter analyze` → 0 issues
+- ✅ Overlay muncul saat pertama kali buka app
+- ✅ Setelah complete, tidak muncul lagi
+- ✅ Reset di Settings → onboarding muncul lagi
