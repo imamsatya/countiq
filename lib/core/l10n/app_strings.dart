@@ -195,6 +195,7 @@ class AppStrings {
   static String get appName => get('app_name');
   static String get appSubtitle => get('app_subtitle');
   static String get play => get('play');
+  static String get result => get('result');
   static String get target => get('target');
   static String get targetReached => get('target_reached');
   static String get tapToStart => get('tap_to_start');

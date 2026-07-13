@@ -7,6 +7,7 @@ import '../../core/engine/puzzle_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
 import '../../core/services/sound_service.dart';
 import '../../data/datasources/local_database.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../providers/game_state_provider.dart';
 
@@ -705,7 +706,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
         child: Column(
           children: [
             Text(
-              'TARGET',
+              AppStrings.target.toUpperCase(),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,

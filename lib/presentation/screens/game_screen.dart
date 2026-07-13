@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/datasources/local_database.dart';
+import '../../core/l10n/app_strings.dart';
 import '../providers/game_state_provider.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
@@ -266,7 +267,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
         child: Column(
           children: [
             Text(
-              gameState.isSolved ? '🎉 TARGET REACHED!' : 'TARGET',
+              gameState.isSolved ? '🎉 ${AppStrings.targetReached.toUpperCase()}' : AppStrings.target.toUpperCase(),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -727,7 +728,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      gameState.isSolved ? 'Result' : 'Skip',
+                      gameState.isSolved ? AppStrings.result : AppStrings.skip,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,

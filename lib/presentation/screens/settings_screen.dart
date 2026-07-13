@@ -5,14 +5,17 @@ import '../../core/constants/app_constants.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
 
-class SettingsScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/locale_provider.dart';
+
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late bool _soundEnabled;
   late bool _hapticEnabled;
   late String _locale;
@@ -336,6 +339,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {
               setState(() => _locale = lang.code);
               LocalDatabase.instance.setLocale(lang.code);
+              ref.read(localeProvider.notifier).state = lang.code;
             },
             borderRadius: BorderRadius.circular(14),
             child: Container(

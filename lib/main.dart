@@ -5,7 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'data/datasources/local_database.dart';
 import 'presentation/router/app_router.dart';
 import 'dart:async';
-
+import 'presentation/providers/locale_provider.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -34,11 +34,14 @@ void main() {
   });
 }
 
-class CountiqApp extends StatelessWidget {
+class CountiqApp extends ConsumerWidget {
   const CountiqApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch localeProvider so the app rebuilds when language changes
+    ref.watch(localeProvider);
+
     return MaterialApp.router(
       title: 'CountiQ',
       debugShowCheckedModeBanner: false,

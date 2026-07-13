@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/engine/puzzle_solver.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../domain/models/puzzle_model.dart';
@@ -320,7 +321,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _isSolved ? '🎉 DAILY COMPLETE!' : '📅 DAILY CHALLENGE',
+                  _isSolved ? '🎉 ${AppStrings.dailyComplete.toUpperCase()}' : '📅 ${AppStrings.dailyChallenge.toUpperCase()}',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

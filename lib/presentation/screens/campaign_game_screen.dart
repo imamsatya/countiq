@@ -8,6 +8,7 @@ import '../../core/engine/campaign_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../../data/datasources/local_database.dart';
+import '../../core/l10n/app_strings.dart';
 import '../providers/game_state_provider.dart';
 
 /// Campaign game screen — plays a specific level number and saves progress
@@ -312,7 +313,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
         ),
         child: Column(
           children: [
-            Text(_isSolved ? '🎉 TARGET REACHED!' : 'TARGET',
+            Text(_isSolved ? '🎉 ${AppStrings.targetReached.toUpperCase()}' : AppStrings.target.toUpperCase(),
                 style: TextStyle(
                   fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 2,
                   color: _isSolved ? Colors.white : AppTheme.textSecondary.withValues(alpha: 0.7),
@@ -575,7 +576,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
                   Icon(_isSolved ? Icons.arrow_forward_rounded : Icons.lock_rounded,
                       color: _isSolved ? AppTheme.backgroundDark : AppTheme.textSecondary.withValues(alpha: 0.3), size: 22),
                   const SizedBox(width: 4),
-                  Text(_isSolved ? 'Result' : 'Solve it!',
+                  Text(_isSolved ? AppStrings.result : AppStrings.skip,
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
                           color: _isSolved ? AppTheme.backgroundDark : AppTheme.textSecondary.withValues(alpha: 0.3))),
                 ]),
