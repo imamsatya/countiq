@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/engine/campaign_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
@@ -10,17 +11,18 @@ import '../../domain/models/puzzle_model.dart';
 import '../../data/datasources/local_database.dart';
 import '../../core/l10n/app_strings.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/locale_provider.dart';
 
 /// Campaign game screen — plays a specific level number and saves progress
-class CampaignGameScreen extends StatefulWidget {
+class CampaignGameScreen extends ConsumerStatefulWidget {
   final int levelNumber;
   const CampaignGameScreen({super.key, required this.levelNumber});
 
   @override
-  State<CampaignGameScreen> createState() => _CampaignGameScreenState();
+  ConsumerState<CampaignGameScreen> createState() => _CampaignGameScreenState();
 }
 
-class _CampaignGameScreenState extends State<CampaignGameScreen>
+class _CampaignGameScreenState extends ConsumerState<CampaignGameScreen>
     with TickerProviderStateMixin {
   late CountiqPuzzle _puzzle;
   late List<BoardNumber> _boardNumbers;
@@ -191,6 +193,7 @@ class _CampaignGameScreenState extends State<CampaignGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),

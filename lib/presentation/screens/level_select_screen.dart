@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/datasources/local_database.dart';
+import '../providers/locale_provider.dart';
 
-class LevelSelectScreen extends StatefulWidget {
+class LevelSelectScreen extends ConsumerStatefulWidget {
   const LevelSelectScreen({super.key});
 
   @override
-  State<LevelSelectScreen> createState() => _LevelSelectScreenState();
+  ConsumerState<LevelSelectScreen> createState() => _LevelSelectScreenState();
 }
 
-class _LevelSelectScreenState extends State<LevelSelectScreen> {
+class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
   static const int totalLevels = 100;
   static const int levelsPerPage = 25;
   int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     final db = LocalDatabase.instance;
     final totalCompleted = db.getCompletedLevelsCount();
     final totalStars = db.getTotalStars();

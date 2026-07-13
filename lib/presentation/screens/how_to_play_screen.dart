@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/l10n/tutorial_strings.dart';
 import '../../core/l10n/app_strings.dart';
-class HowToPlayScreen extends StatefulWidget {
+import '../providers/locale_provider.dart';
+
+class HowToPlayScreen extends ConsumerStatefulWidget {
   const HowToPlayScreen({super.key});
 
   @override
-  State<HowToPlayScreen> createState() => _HowToPlayScreenState();
+  ConsumerState<HowToPlayScreen> createState() => _HowToPlayScreenState();
 }
 
-class _HowToPlayScreenState extends State<HowToPlayScreen> {
+class _HowToPlayScreenState extends ConsumerState<HowToPlayScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -55,6 +58,7 @@ class _HowToPlayScreenState extends State<HowToPlayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),

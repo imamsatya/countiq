@@ -9,6 +9,8 @@ import '../../domain/models/puzzle_model.dart';
 import '../widgets/achievement_toast.dart';
 import '../../core/l10n/app_strings.dart';
 
+import '../providers/locale_provider.dart';
+
 class ResultScreen extends ConsumerStatefulWidget {
   final int timeSeconds;
   final int stepsCount;
@@ -119,6 +121,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     final effectiveStars = widget.stars > 0 ? widget.stars : 1;
 
     return Scaffold(

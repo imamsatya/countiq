@@ -2,21 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/l10n/app_strings.dart';
 import '../../core/engine/puzzle_solver.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/locale_provider.dart';
 
-class DailyChallengeScreen extends StatefulWidget {
+class DailyChallengeScreen extends ConsumerStatefulWidget {
   const DailyChallengeScreen({super.key});
 
   @override
-  State<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
+  ConsumerState<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
 }
 
-class _DailyChallengeScreenState extends State<DailyChallengeScreen>
+class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen>
     with TickerProviderStateMixin {
   late CountiqPuzzle _puzzle;
   late List<BoardNumber> _boardNumbers;
@@ -189,6 +191,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     final now = DateTime.now();
     final months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/engine/puzzle_generator.dart';
 import '../../core/engine/puzzle_solver.dart';
@@ -10,15 +11,16 @@ import '../../data/datasources/local_database.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../domain/models/puzzle_model.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/locale_provider.dart';
 
-class TimeAttackScreen extends StatefulWidget {
+class TimeAttackScreen extends ConsumerStatefulWidget {
   const TimeAttackScreen({super.key});
 
   @override
-  State<TimeAttackScreen> createState() => _TimeAttackScreenState();
+  ConsumerState<TimeAttackScreen> createState() => _TimeAttackScreenState();
 }
 
-class _TimeAttackScreenState extends State<TimeAttackScreen>
+class _TimeAttackScreenState extends ConsumerState<TimeAttackScreen>
     with TickerProviderStateMixin {
   // Game config
   static const int _totalSeconds = 60;
@@ -274,6 +276,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),

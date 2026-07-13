@@ -7,6 +7,8 @@ import '../../data/datasources/local_database.dart';
 import '../../core/l10n/app_strings.dart';
 import '../providers/game_state_provider.dart';
 
+import '../providers/locale_provider.dart';
+
 class GameScreen extends ConsumerStatefulWidget {
   final String difficulty;
   const GameScreen({super.key, required this.difficulty});
@@ -63,6 +65,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     final gameState = ref.watch(gameWithDifficultyProvider(widget.difficulty));
     final notifier = ref.read(gameWithDifficultyProvider(widget.difficulty).notifier);
 

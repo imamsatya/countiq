@@ -8,6 +8,8 @@ import '../../core/services/daily_challenge_service.dart';
 import '../widgets/particle_background.dart';
 import '../widgets/onboarding_overlay.dart';
 
+import '../providers/locale_provider.dart';
+
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -112,6 +114,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
     final db = LocalDatabase.instance;
     final highestLevel = db.getHighestCompletedLevel();
     final totalStars = db.getTotalStars();
