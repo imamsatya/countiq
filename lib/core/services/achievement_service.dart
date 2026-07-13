@@ -1,4 +1,5 @@
 import '../../data/datasources/local_database.dart';
+import '../l10n/achievement_strings.dart';
 
 /// Achievement definition
 class Achievement {
@@ -24,33 +25,33 @@ class AchievementService {
   AchievementService._();
   static final instance = AchievementService._();
 
-  static const List<Achievement> allAchievements = [
+  static List<Achievement> get allAchievements => [
     // Beginner
     Achievement(
       id: 'first_solve',
-      title: 'First Steps',
-      description: 'Solve your first puzzle',
+      title: AchievementStrings.get('ach_title_first_solve'),
+      description: AchievementStrings.get('ach_desc_first_solve'),
       icon: '🎯',
       category: AchievementCategory.beginner,
     ),
     Achievement(
       id: 'no_hint_solve',
-      title: 'Pure Mind',
-      description: 'Solve a puzzle without any hints',
+      title: AchievementStrings.get('ach_title_no_hint_solve'),
+      description: AchievementStrings.get('ach_desc_no_hint_solve'),
       icon: '🧠',
       category: AchievementCategory.beginner,
     ),
     Achievement(
       id: 'speed_demon_30',
-      title: 'Speed Demon',
-      description: 'Solve a puzzle in under 30 seconds',
+      title: AchievementStrings.get('ach_title_speed_demon_30'),
+      description: AchievementStrings.get('ach_desc_speed_demon_30'),
       icon: '⚡',
       category: AchievementCategory.beginner,
     ),
     Achievement(
       id: 'three_stars',
-      title: 'Perfect Score',
-      description: 'Get 3 stars on any puzzle',
+      title: AchievementStrings.get('ach_title_three_stars'),
+      description: AchievementStrings.get('ach_desc_three_stars'),
       icon: '⭐',
       category: AchievementCategory.beginner,
     ),
@@ -58,29 +59,29 @@ class AchievementService {
     // Campaign
     Achievement(
       id: 'campaign_10',
-      title: 'Getting Started',
-      description: 'Complete 10 campaign levels',
+      title: AchievementStrings.get('ach_title_campaign_10'),
+      description: AchievementStrings.get('ach_desc_campaign_10'),
       icon: '📖',
       category: AchievementCategory.campaign,
     ),
     Achievement(
       id: 'campaign_25',
-      title: 'Quarter Way',
-      description: 'Complete 25 campaign levels',
+      title: AchievementStrings.get('ach_title_campaign_25'),
+      description: AchievementStrings.get('ach_desc_campaign_25'),
       icon: '🏅',
       category: AchievementCategory.campaign,
     ),
     Achievement(
       id: 'campaign_50',
-      title: 'Halfway Hero',
-      description: 'Complete 50 campaign levels',
+      title: AchievementStrings.get('ach_title_campaign_50'),
+      description: AchievementStrings.get('ach_desc_campaign_50'),
       icon: '🏆',
       category: AchievementCategory.campaign,
     ),
     Achievement(
       id: 'campaign_100',
-      title: 'Campaign Master',
-      description: 'Complete all 100 campaign levels',
+      title: AchievementStrings.get('ach_title_campaign_100'),
+      description: AchievementStrings.get('ach_desc_campaign_100'),
       icon: '👑',
       category: AchievementCategory.campaign,
     ),
@@ -88,29 +89,29 @@ class AchievementService {
     // Quick Play
     Achievement(
       id: 'quick_10',
-      title: 'Puzzle Lover',
-      description: 'Solve 10 quick play puzzles',
+      title: AchievementStrings.get('ach_title_quick_10'),
+      description: AchievementStrings.get('ach_desc_quick_10'),
       icon: '💚',
       category: AchievementCategory.quickPlay,
     ),
     Achievement(
       id: 'quick_50',
-      title: 'Puzzle Addict',
-      description: 'Solve 50 quick play puzzles',
+      title: AchievementStrings.get('ach_title_quick_50'),
+      description: AchievementStrings.get('ach_desc_quick_50'),
       icon: '💜',
       category: AchievementCategory.quickPlay,
     ),
     Achievement(
       id: 'all_difficulties',
-      title: 'Versatile',
-      description: 'Solve at least one puzzle in each difficulty',
+      title: AchievementStrings.get('ach_title_all_difficulties'),
+      description: AchievementStrings.get('ach_desc_all_difficulties'),
       icon: '🎨',
       category: AchievementCategory.quickPlay,
     ),
     Achievement(
       id: 'hard_solver',
-      title: 'Hard Mode Hero',
-      description: 'Solve 10 hard puzzles',
+      title: AchievementStrings.get('ach_title_hard_solver'),
+      description: AchievementStrings.get('ach_desc_hard_solver'),
       icon: '🔴',
       category: AchievementCategory.quickPlay,
     ),
@@ -118,29 +119,29 @@ class AchievementService {
     // Daily
     Achievement(
       id: 'daily_first',
-      title: 'Daily Player',
-      description: 'Complete your first daily challenge',
+      title: AchievementStrings.get('ach_title_daily_first'),
+      description: AchievementStrings.get('ach_desc_daily_first'),
       icon: '📅',
       category: AchievementCategory.daily,
     ),
     Achievement(
       id: 'streak_3',
-      title: 'On a Roll',
-      description: 'Maintain a 3-day streak',
+      title: AchievementStrings.get('ach_title_streak_3'),
+      description: AchievementStrings.get('ach_desc_streak_3'),
       icon: '🔥',
       category: AchievementCategory.daily,
     ),
     Achievement(
       id: 'streak_7',
-      title: 'Weekly Warrior',
-      description: 'Maintain a 7-day streak',
+      title: AchievementStrings.get('ach_title_streak_7'),
+      description: AchievementStrings.get('ach_desc_streak_7'),
       icon: '💪',
       category: AchievementCategory.daily,
     ),
     Achievement(
       id: 'streak_30',
-      title: 'Monthly Master',
-      description: 'Maintain a 30-day streak',
+      title: AchievementStrings.get('ach_title_streak_30'),
+      description: AchievementStrings.get('ach_desc_streak_30'),
       icon: '🌟',
       category: AchievementCategory.daily,
     ),
@@ -148,29 +149,29 @@ class AchievementService {
     // Mastery
     Achievement(
       id: 'speed_15',
-      title: 'Lightning Fast',
-      description: 'Solve a puzzle in under 15 seconds',
+      title: AchievementStrings.get('ach_title_speed_15'),
+      description: AchievementStrings.get('ach_desc_speed_15'),
       icon: '🌩️',
       category: AchievementCategory.mastery,
     ),
     Achievement(
       id: 'total_100',
-      title: 'Centurion',
-      description: 'Solve 100 puzzles total',
+      title: AchievementStrings.get('ach_title_total_100'),
+      description: AchievementStrings.get('ach_desc_total_100'),
       icon: '💯',
       category: AchievementCategory.mastery,
     ),
     Achievement(
       id: 'stars_100',
-      title: 'Star Collector',
-      description: 'Earn 100 stars total',
+      title: AchievementStrings.get('ach_title_stars_100'),
+      description: AchievementStrings.get('ach_desc_stars_100'),
       icon: '✨',
       category: AchievementCategory.mastery,
     ),
     Achievement(
       id: 'two_step_solve',
-      title: 'Efficient',
-      description: 'Solve a puzzle in only 2 steps',
+      title: AchievementStrings.get('ach_title_two_step_solve'),
+      description: AchievementStrings.get('ach_desc_two_step_solve'),
       icon: '🎯',
       category: AchievementCategory.mastery,
     ),
