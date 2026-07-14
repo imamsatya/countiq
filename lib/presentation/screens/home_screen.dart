@@ -119,7 +119,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final db = LocalDatabase.instance;
     final highestLevel = db.getHighestCompletedLevel();
     final totalStars = db.getTotalStars();
-    final totalSolved = db.totalPuzzlesSolved;
 
     return Scaffold(
       body: Stack(
@@ -177,32 +176,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                       ),
 
-                      const SizedBox(height: 24),
-
-                      // Mini stats row
-                      FadeTransition(
-                        opacity: _titleFade,
-                        child: totalSolved > 0
-                            ? Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _buildMiniStat(Icons.emoji_events_rounded,
-                                        '$totalSolved', AppTheme.primaryColor),
-                                    const SizedBox(width: 20),
-                                    _buildMiniStat(Icons.star_rounded,
-                                        '$totalStars', const Color(0xFFFFD700)),
-                                    if (highestLevel > 0) ...[
-                                      const SizedBox(width: 20),
-                                      _buildMiniStat(Icons.flag_rounded,
-                                          'Lv.$highestLevel', AppTheme.successColor),
-                                    ],
-                                  ],
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ),
+                      const SizedBox(height: 20),
 
                       // Buttons section (fade + slide)
                       FadeTransition(
@@ -211,68 +185,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           position: _buttonsSlide,
                           child: Column(
                             children: [
+                              // Campaign progress card
+                              _buildCampaignProgressCard(context, highestLevel, totalStars),
+                              const SizedBox(height: 10),
+
                               // Daily Challenge card
                               _buildDailyCard(context),
-                              const SizedBox(height: 12),
-
-                              // Campaign button
-                              _buildCampaignButton(context, highestLevel),
                               const SizedBox(height: 10),
 
-                              // Quick Play difficulty selectors
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _buildDifficultyButton(
-                                      context,
-                                      label: '🟢 ${AppStrings.get('easy')}',
-                                      difficulty: 'easy',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: _buildDifficultyButton(
-                                      context,
-                                      label: '🟡 ${AppStrings.get('medium')}',
-                                      difficulty: 'medium',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: _buildDifficultyButton(
-                                      context,
-                                      label: '🔴 ${AppStrings.get('hard')}',
-                                      difficulty: 'hard',
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 10),
-
-                              // Time Attack + Level Select row
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _buildTimeAttackButton(context),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: _buildMenuButton(
-                                      context,
-                                      icon: Icons.grid_view_rounded,
-                                      label: AppStrings.get('select_level'),
-                                      onTap: () => context.push('/levels'),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Quick Play + Time Attack row (compact)
+                              _buildQuickPlayRow(context),
                             ],
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
                       // Bottom icon row (fade in last)
                       FadeTransition(
@@ -478,145 +406,220 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildMiniStat(IconData icon, String value, Color color) {
+  Widget _buildCampaignProgressCard(BuildContext context, int highestLevel, int totalStars) {
+    final nextLevel = (highestLevel + 1).clamp(1, CampaignGenerator.totalLevels);
+    final isResume = highestLevel > 0;
+    final isAllDone = highestLevel >= CampaignGenerator.totalLevels;
+    final tier = CampaignGenerator.getTier(isAllDone ? CampaignGenerator.totalLevels : nextLevel);
+    final progress = highestLevel / CampaignGenerator.totalLevels;
+
+    return GestureDetector(
+      onTap: isAllDone
+          ? () => context.push('/levels')
+          : () => context.push('/campaign/$nextLevel'),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: AppTheme.primaryGlowDecoration(borderRadius: 20),
+        child: Column(
+          children: [
+            // Top row: tier label + stars
+            Row(
+              children: [
+                // Tier badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0A0E1A).withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '${tier.emoji} ${tier.name}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0A0E1A),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                // Stars count
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star_rounded, color: Color(0xFFFFD700), size: 16),
+                    const SizedBox(width: 3),
+                    Text(
+                      '$totalStars',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF0A0E1A),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Play / Continue text
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isAllDone ? Icons.emoji_events_rounded : Icons.play_arrow_rounded,
+                  color: const Color(0xFF0A0E1A),
+                  size: 28,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isAllDone
+                      ? '${AppStrings.get('campaign')} ✓'
+                      : isResume
+                          ? '${AppStrings.get('continue_level')} $nextLevel'
+                          : AppStrings.play,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0A0E1A),
+                    letterSpacing: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Progress bar
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.15),
+                      color: const Color(0xFF0A0E1A).withValues(alpha: 0.5),
+                      minHeight: 6,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '$highestLevel / ${CampaignGenerator.totalLevels}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF0A0E1A).withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ),
+
+            // Select Level link
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () => context.push('/levels'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.grid_view_rounded,
+                      color: const Color(0xFF0A0E1A).withValues(alpha: 0.5), size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    AppStrings.get('select_level'),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF0A0E1A).withValues(alpha: 0.5),
+                      decoration: TextDecoration.underline,
+                      decorationColor: const Color(0xFF0A0E1A).withValues(alpha: 0.3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Compact row with Quick Play (Easy/Medium/Hard) + Time Attack
+  Widget _buildQuickPlayRow(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: color, size: 16),
-        const SizedBox(width: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: color,
+        // Quick Play buttons
+        Expanded(
+          flex: 3,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+            decoration: AppTheme.glassDecoration(borderRadius: 14),
+            child: Row(
+              children: [
+                Expanded(child: _buildCompactDifficultyBtn(context, '🟢', AppStrings.get('easy'), 'easy')),
+                const SizedBox(width: 4),
+                Expanded(child: _buildCompactDifficultyBtn(context, '🟡', AppStrings.get('medium'), 'medium')),
+                const SizedBox(width: 4),
+                Expanded(child: _buildCompactDifficultyBtn(context, '🔴', AppStrings.get('hard'), 'hard')),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // Time Attack button
+        Expanded(
+          flex: 2,
+          child: GestureDetector(
+            onTap: () => context.push('/time-attack'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Colors.orange.withValues(alpha: 0.1),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('⚡', style: TextStyle(fontSize: 13)),
+                  const SizedBox(width: 4),
+                  Text(
+                    AppStrings.get('time_attack'),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCampaignButton(BuildContext context, int highestLevel) {
-    final nextLevel = (highestLevel + 1).clamp(1, CampaignGenerator.totalLevels);
-    final isResume = highestLevel > 0;
-    final isCompleted = highestLevel >= CampaignGenerator.totalLevels;
-
-    return GestureDetector(
-      onTap: isCompleted
-          ? () => context.push('/levels')
-          : () => context.push('/campaign/$nextLevel'),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        decoration: AppTheme.primaryGlowDecoration(borderRadius: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isCompleted ? Icons.emoji_events_rounded : Icons.play_arrow_rounded,
-              color: const Color(0xFF0A0E1A),
-              size: 28,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              isCompleted
-                  ? '${AppStrings.get('campaign')} ✓'
-                  : isResume
-                      ? '${AppStrings.get('continue_level')} $nextLevel'
-                      : AppStrings.play,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF0A0E1A),
-                letterSpacing: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDifficultyButton(
-    BuildContext context, {
-    required String label,
-    required String difficulty,
-  }) {
+  Widget _buildCompactDifficultyBtn(BuildContext context, String dot, String label, String difficulty) {
     return GestureDetector(
       onTap: () => context.push('/game/$difficulty'),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: AppTheme.glassDecoration(borderRadius: 14),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white.withValues(alpha: 0.05),
+        ),
         child: Center(
           child: Text(
-            label,
+            '$dot $label',
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTimeAttackButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push('/time-attack'),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.orange.withValues(alpha: 0.1),
-          border: Border.all(
-            color: Colors.orange.withValues(alpha: 0.3),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('⚡', style: TextStyle(fontSize: 14)),
-            const SizedBox(width: 6),
-            Text(
-              AppStrings.get('time_attack'),
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.orange,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMenuButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: AppTheme.glassDecoration(borderRadius: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: AppTheme.primaryColor, size: 18),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
       ),
     );
