@@ -621,15 +621,13 @@ class _OnboardingOverlayState extends State<OnboardingOverlay>
 
               // Feature icons
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFeatureIcon('⭐', 'Stars'),
-                  const SizedBox(width: 24),
-                  _buildFeatureIcon('📅', 'Daily'),
-                  const SizedBox(width: 24),
-                  _buildFeatureIcon('⚡', 'Time Attack'),
-                  const SizedBox(width: 24),
-                  _buildFeatureIcon('🏆', 'Achievements'),
+                  Expanded(child: _buildFeatureIcon('⭐', 'Stars')),
+                  Expanded(child: _buildFeatureIcon('📅', 'Daily')),
+                  Expanded(child: _buildFeatureIcon('⚡', 'Time Attack')),
+                  Expanded(child: _buildFeatureIcon('🏆', 'Achievements')),
                 ],
               ),
 
@@ -690,6 +688,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay>
         const SizedBox(height: 6),
         Text(
           label,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 10,
             color: AppTheme.textMuted.withValues(alpha: 0.6),
