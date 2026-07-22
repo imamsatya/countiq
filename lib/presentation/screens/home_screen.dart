@@ -195,6 +195,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
                               // Quick Play + Time Attack row (compact)
                               _buildQuickPlayRow(context),
+                              const SizedBox(height: 8),
+
+                              // Pass & Play button
+                              _buildPassPlayButton(context),
                             ],
                           ),
                         ),
@@ -639,6 +643,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           height: 52,
           decoration: AppTheme.glassDecoration(borderRadius: 16),
           child: Icon(icon, color: AppTheme.primaryColor, size: 24),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPassPlayButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/pass-play'),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: const Color(0xFF9C27B0).withValues(alpha: 0.1),
+          border: Border.all(color: const Color(0xFF9C27B0).withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.people_rounded, color: Color(0xFFCE93D8), size: 18),
+            const SizedBox(width: 8),
+            Text(
+              AppStrings.get('pass_and_play'),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFFCE93D8),
+              ),
+            ),
+          ],
         ),
       ),
     );

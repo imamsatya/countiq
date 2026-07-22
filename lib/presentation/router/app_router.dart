@@ -11,6 +11,8 @@ import '../screens/daily_challenge_screen.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/how_to_play_screen.dart';
 import '../screens/time_attack_screen.dart';
+import '../screens/pass_play_setup_screen.dart';
+import '../screens/pass_play_screen.dart';
 import '../screens/dev_mode_screen.dart';
 
 /// Smooth slide-fade transition for all routes
@@ -128,6 +130,28 @@ final appRouter = GoRouter(
       path: '/time-attack',
       pageBuilder: (context, state) =>
           _transitionPage(child: const TimeAttackScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/pass-play',
+      pageBuilder: (context, state) =>
+          _transitionPage(child: const PassPlaySetupScreen(), state: state),
+    ),
+    GoRoute(
+      path: '/pass-play/game',
+      pageBuilder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>? ?? {};
+        return _transitionPage(
+          child: PassPlayScreen(
+            key: ValueKey('pp_${DateTime.now().millisecondsSinceEpoch}'),
+            playerCount: extras['playerCount'] ?? 2,
+            playerNames: List<String>.from(extras['playerNames'] ?? ['Player 1', 'Player 2']),
+            totalRounds: extras['totalRounds'] ?? 3,
+            difficulty: extras['difficulty'] ?? 'medium',
+            timeLimitSeconds: extras['timeLimitSeconds'] ?? 120,
+          ),
+          state: state,
+        );
+      },
     ),
     GoRoute(
       path: '/dev',
